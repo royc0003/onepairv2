@@ -3,6 +3,7 @@ package com.iff.onepairv2;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,10 +85,10 @@ public class ListViewAdapter extends BaseAdapter {
             public void onClick(View view) {
                 //start newActivity with title for actionbar and text for textview
                 Intent intent = new Intent(mContext, SelectedDealPage.class);
-                System.out.println(modellist.get(position).getName());
                 intent.putExtra("Deal", modellist.get(position));
-                //intent.putExtra("actionBarTitle", modellist.get(position).getName());
-                //intent.putExtra("contentTv", modellist.get(position).getTerms());
+                if((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
                 mContext.startActivity(intent);
             }
         });
