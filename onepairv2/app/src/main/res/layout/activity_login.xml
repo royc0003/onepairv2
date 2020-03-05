@@ -22,16 +22,20 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/log_email"
-        android:layout_width="341dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <EditText
             android:id="@+id/email"
-            android:layout_width="341dp"
+            android:layout_width="match_parent"
             android:layout_height="70dp"
             android:ems="10"
             android:hint="Email"
@@ -40,16 +44,20 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/log_password"
-        android:layout_width="343dp"
+        android:layout_width="0dp"
         android:layout_height="69dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_email">
 
         <EditText
             android:id="@+id/password"
-            android:layout_width="341dp"
+            android:layout_width="match_parent"
             android:layout_height="70dp"
             android:ems="10"
             android:hint="Password"
@@ -60,12 +68,12 @@
         android:id="@+id/login_login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:text="Log In"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.891"
+        app:layout_constraintHorizontal_bias="0.848"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_password" />
 
