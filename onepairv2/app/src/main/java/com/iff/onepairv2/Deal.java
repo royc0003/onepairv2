@@ -1,6 +1,8 @@
 package com.iff.onepairv2;
 
-public class Deal {
+import java.io.Serializable;
+
+public class Deal implements Serializable {
     private int id;
     private String name;
     private String start;

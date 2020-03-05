@@ -21,16 +21,16 @@ public class ListViewAdapter extends BaseAdapter {
     //variables
     Context mContext;
     LayoutInflater inflater;
-    List<Model> modellist;
-    ArrayList<Model> arrayList;
+    List<Deal> modellist;
+    ArrayList<Deal> arrayList;
 
     //constructor
-    public ListViewAdapter(Context context, List<Model> modellist)
+    public ListViewAdapter(Context context, List<Deal> modellist)
     {
         mContext = context;
         this.modellist = modellist;
         inflater = LayoutInflater.from(mContext);
-        this.arrayList = new ArrayList<Model>();
+        this.arrayList = new ArrayList<Deal>();
         this.arrayList.addAll(modellist);
     }
 
@@ -73,90 +73,22 @@ public class ListViewAdapter extends BaseAdapter {
             holder = (ViewHolder)view.getTag();
         }
         //set the result into textviews
-        holder.mTitleTv.setText(modellist.get(position).getTitle());
-        holder.mDescTv.setText(modellist.get(position).getDesc());
+        holder.mTitleTv.setText(modellist.get(position).getName());
+        holder.mDescTv.setText("");
         //set the result in imageview
-        Picasso.get().load(Uri.parse(modellist.get(position).getIcon())).into(holder.mIconIv);
+        Picasso.get().load(Uri.parse(modellist.get(position).getImage())).into(holder.mIconIv);
 
         //listview item clicks, all deals from webscraping put here
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //code later
-                if(modellist.get(position).getTitle().equals("Starbucks")){
-                    System.out.println("Sb clicked"); //for debugging
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "Starbucks");
-                    intent.putExtra("contentTv", "Starb details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("Long John Silvers")){
-                    System.out.println("LJ clicked"); //for debugging
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "LongJohn");
-                    intent.putExtra("contentTv", "LJ details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("Macdonalds")){
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "Macdonalds");
-                    intent.putExtra("contentTv", "Mac details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("GongCha")){
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "GongCha");
-                    intent.putExtra("contentTv", "Gongcha details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("Liho")){
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "Liho");
-                    intent.putExtra("contentTv", "Liho details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("CoffeeBean")){
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "CoffeeBean");
-                    intent.putExtra("contentTv", "CoffeeBean details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("Jack's Place")){
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "Jack's Place");
-                    intent.putExtra("contentTv", "Jack's Place details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("Cathay Cineplex")) {
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "Cathay Cineplex");
-                    intent.putExtra("contentTv", "Cathay details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("Golden Village")) {
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "GV Cineplex");
-                    intent.putExtra("contentTv", "GV details");
-                    mContext.startActivity(intent);
-                }
-                if(modellist.get(position).getTitle().equals("Universal Studios")) {
-                    //start newActivity with title for actionbar and text for textview
-                    Intent intent = new Intent(mContext, SelectedDealPage.class);
-                    intent.putExtra("actionBarTitle", "USS");
-                    intent.putExtra("contentTv", "USS details");
-                    mContext.startActivity(intent);
-                }
-
-
+                //start newActivity with title for actionbar and text for textview
+                Intent intent = new Intent(mContext, SelectedDealPage.class);
+                System.out.println(modellist.get(position).getName());
+                intent.putExtra("Deal", modellist.get(position));
+                //intent.putExtra("actionBarTitle", modellist.get(position).getName());
+                //intent.putExtra("contentTv", modellist.get(position).getTerms());
+                mContext.startActivity(intent);
             }
         });
         return view;
@@ -170,10 +102,10 @@ public class ListViewAdapter extends BaseAdapter {
             modellist.addAll(arrayList);
         }
         else {
-            for(Model model : arrayList) {
-                if(model.getTitle().toLowerCase(Locale.getDefault())
+            for(Deal deal : arrayList) {
+                if(deal.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)) {
-                    modellist.add(model);
+                    modellist.add(deal);
                 }
             }
         }
