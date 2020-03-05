@@ -30,7 +30,7 @@ public class RetailDealsPage extends AppCompatActivity {
     String[] title;
     String[] description;
     int[] icon;
-    ArrayList<Model> arrayList = new ArrayList<Model>();
+    ArrayList<Deal> arrayList = new ArrayList<Deal>();
 
     private Toolbar mToolbar;
     private FirebaseAuth mAuth;
@@ -65,8 +65,8 @@ public class RetailDealsPage extends AppCompatActivity {
                 ArrayList<Deal> deals = response.body();
                 for(Deal deal: deals){
                     //deal.printDeal();
-                    Model model = new Model(deal.getName(), "", deal.getImage());
-                    arrayList.add(model);
+                    //Model model = new Model(deal.getName(), "", deal.getImage());
+                    arrayList.add(deal);
                 }
                 adapter = new ListViewAdapter(getApplicationContext(), arrayList);
                 listView.setAdapter(adapter);
