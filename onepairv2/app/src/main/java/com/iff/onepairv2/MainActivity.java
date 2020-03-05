@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(item.getItemId() == R.id.main_profile_btn){
             Intent ProfileIntent = new Intent(MainActivity.this, ProfileActivity.class);
             startActivity(ProfileIntent);
-            finish();
         }
 
         return true;

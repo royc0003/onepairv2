@@ -2,10 +2,12 @@ package com.iff.onepairv2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -78,14 +80,36 @@ public class OthersDealsPage extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.dealspagemenu, menu);
+        MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView)myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if(TextUtils.isEmpty(s)) {
+                    adapter.filter("");
+                    listView.clearTextFilter();
+                }
+                else {
+                    adapter.filter(s);
+                }
+                return true;
+            }
+        });
+
         return true;
     }
 
+    //for side bar menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        super.onOptionsItemSelected(item);
+        int id = item.getItemId();
 
         if(item.getItemId() == R.id.main_logout_btn){
             FirebaseAuth.getInstance().signOut();
@@ -95,9 +119,11 @@ public class OthersDealsPage extends AppCompatActivity {
             Intent startIntent = new Intent(OthersDealsPage.this, ProfileActivity.class);
             startActivity(startIntent);
         }
-
-        return true;
+        //return super.onOptionsItemSelected(item);
+        return false;
     }
+
+
     private void sendToStart() {
         Intent startIntent = new Intent(OthersDealsPage.this, StartActivity.class);
         startActivity(startIntent);
