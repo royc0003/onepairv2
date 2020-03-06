@@ -8,9 +8,11 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -70,6 +72,14 @@ public class RetailDealsPage extends AppCompatActivity {
                 }
                 adapter = new ListViewAdapter(getApplicationContext(), arrayList);
                 listView.setAdapter(adapter);
+
+                //if array list is empty
+                if(arrayList.size() == 0)
+                {
+                    Toast toast = Toast.makeText(RetailDealsPage.this, "Sorry there are no deals currently.", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
             }
 
             @Override
