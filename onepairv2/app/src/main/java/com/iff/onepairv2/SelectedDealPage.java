@@ -121,7 +121,7 @@ public class SelectedDealPage extends AppCompatActivity {
                     selectedLocations.remove(Integer.valueOf(position));
                     selectedKey.remove(Integer.valueOf(locations.get(position).getId()));
                 }
-                
+
             }
         });
 
