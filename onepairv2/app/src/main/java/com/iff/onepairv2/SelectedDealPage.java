@@ -77,7 +77,7 @@ public class SelectedDealPage extends AppCompatActivity {
         //instantiate alertdialog builder
         AlertDialog.Builder myBuilder = new AlertDialog.Builder(this);
         //data source
-        final CharSequence[] locations = {"Sengkang", "Hougang", "Woodlands", "Yishun", "Tampines", "Khatib", "Punggol", "Yew Tee", "Aljunied", "Bishan", "Toa Payoh", "Orchard"};
+        final CharSequence[] locations = Location.LOCATIONS;
         final ArrayList selectedLocations = new ArrayList();
         //set properties using method chanining
         myBuilder.setTitle("Choose location(s)").setMultiChoiceItems(locations, null, new DialogInterface.OnMultiChoiceClickListener() {
