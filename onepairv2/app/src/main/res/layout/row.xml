@@ -20,13 +20,14 @@
         android:gravity="center"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp">
+
         <TextView
             android:id="@+id/mainTitle"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="17sp"
+            android:textStyle="bold|italic" />
         <TextView
             android:id="@+id/mainDesc"
             android:text="Description"
