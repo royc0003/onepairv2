@@ -18,6 +18,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class SelectedDealPage extends AppCompatActivity {
     Dialog myDialog;
     AlertDialog alertDialog;
@@ -25,6 +31,7 @@ public class SelectedDealPage extends AppCompatActivity {
     private ImageView dealsImage;
     private TextView termsCondition;
     private TextView startEnd;
+    private ArrayList<Location> locations;
 
     private Deal deal;
 
@@ -38,18 +45,33 @@ public class SelectedDealPage extends AppCompatActivity {
         dealsImage = findViewById(R.id.dealsImage);
         termsCondition = findViewById(R.id.termsConditions);
         startEnd = findViewById(R.id.startend);
-        /*
-        ActionBar actionBar = getSupportActionBar();
-        TextView mDetailTv = findViewById(R.id.textView);*/
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://128.199.167.80:8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BackEndController backEndController = retrofit.create(BackEndController.class);
+        Call<ArrayList<Location>> call = backEndController.getAllLocation();
+        call.enqueue(new Callback<ArrayList<Location>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Location>> call, Response<ArrayList<Location>> response) {
+                if(!response.isSuccessful()){
+                    System.out.println("Oops something went wrong!");
+                    return;
+                }
+                locations = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Location>> call, Throwable t) {
+                System.out.println("Oops something went wrong!");
+            }
+        });
+
 
         //get data from previous activity when item of listview is clicked using intent
         Intent intent = getIntent();
         deal = (Deal) intent.getSerializableExtra("Deal");
-        //System.out.println(deal.getId());
-
-        //set actionbar title
-        //actionBar.setTitle(deal.getName());
-        //set text in textview
 
         //details of webscraping goes in here
         dealsDetail.setText(deal.getName());
@@ -77,22 +99,29 @@ public class SelectedDealPage extends AppCompatActivity {
         //instantiate alertdialog builder
         AlertDialog.Builder myBuilder = new AlertDialog.Builder(this);
         //data source
-        final CharSequence[] locations = Location.LOCATIONS;
         final ArrayList selectedLocations = new ArrayList();
+        final String locationNames[] = new String[locations.size()];
+        final ArrayList<Integer> selectedKey = new ArrayList<Integer>();
+        for(int i = 0; i < locations.size(); i++){
+            locationNames[i] = locations.get(i).getName();
+        }
         //set properties using method chanining
-        myBuilder.setTitle("Choose location(s)").setMultiChoiceItems(locations, null, new DialogInterface.OnMultiChoiceClickListener() {
+        myBuilder.setTitle("Choose location(s)").setMultiChoiceItems(locationNames, null, new DialogInterface.OnMultiChoiceClickListener() {
 
             //selected locations are placed into an selectedLocations array list
             @Override
             public void onClick(DialogInterface dialog, int position, boolean isChecked) {
                 if(isChecked) {
                     //if the user checked the item, add it to the selected items
-                    selectedLocations.add(locations[position]);
+                    selectedLocations.add(locationNames[position]);
+                    selectedKey.add(locations.get(position).getId());
                 }
                 else if (selectedLocations.contains(position)) {
                     //else if the item is already in the array list, remove it
                     selectedLocations.remove(Integer.valueOf(position));
+                    selectedKey.remove(Integer.valueOf(locations.get(position).getId()));
                 }
+                
             }
         });
 
