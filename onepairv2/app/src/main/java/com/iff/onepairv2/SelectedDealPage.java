@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -141,12 +142,47 @@ public class SelectedDealPage extends AppCompatActivity {
                     toast.show();
                 }
                 else {
+                    /*
                     for (Object nebular : selectedLocations) {
                         sb.append(nebular.toString() + "\n");
                     }
                     Toast.makeText(SelectedDealPage.this, sb.toString(), Toast.LENGTH_SHORT).show();
                     System.out.println("LOcation button clicksed");
-                    ShowPopUp();
+                    ShowPopUp();*/
+                    String c = "";
+                    for(int j = 0; j < selectedKey.size(); j++){
+                        if(j == selectedKey.size()-1){
+                            c += Integer.toString(selectedKey.get(j));
+                        }else{
+                            String x = Integer.toString(selectedKey.get(j)) + ",";
+                            c += x;
+                        }
+                    }
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("http://128.199.167.80:8080/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    BackEndController backEndController = retrofit.create(BackEndController.class);
+                    Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
+                    call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(!response.isSuccessful()){
+                                Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                                toast.show();
+                                return;
+                            }
+                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                            toast.show();
+                            // Add matching algo here
+                        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    });
+
 
                 }
             }
