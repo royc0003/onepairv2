@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -133,13 +135,20 @@ public class SelectedDealPage extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 StringBuilder sb = new StringBuilder();
-                for (Object nebular : selectedLocations) {
-                    sb.append(nebular.toString() + "\n");
+                if (selectedLocations.size() == 0)
+                {
+                    Toast toast = Toast.makeText(SelectedDealPage.this, "Please select at least one location.", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
-                Toast.makeText(SelectedDealPage.this, sb.toString(), Toast.LENGTH_SHORT).show();
-                System.out.println("LOcation button clicksed");
-                ShowPopUp();
+                else {
+                    for (Object nebular : selectedLocations) {
+                        sb.append(nebular.toString() + "\n");
+                    }
+                    Toast.makeText(SelectedDealPage.this, sb.toString(), Toast.LENGTH_SHORT).show();
+                    System.out.println("LOcation button clicksed");
+                    ShowPopUp();
 
+                }
             }
         });
 
