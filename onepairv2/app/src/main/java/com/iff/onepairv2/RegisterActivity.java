@@ -116,8 +116,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                     HashMap<String, String> userMap = new HashMap<>();
                     userMap.put("name", display_name);
-                    userMap.put("image", "default");
-                    userMap.put("thumb_image", "default");
+                    userMap.put("image", "https://firebasestorage.googleapis.com/v0/b/onepairv2.appspot.com/o/profile_images%2Fdefault.png?alt=media&token=3d4d5d85-b050-481b-87ab-c0ae09dbda32");
+                    userMap.put("thumb_image", "https://firebasestorage.googleapis.com/v0/b/onepairv2.appspot.com/o/profile_images%2Fdefault.png?alt=media&token=3d4d5d85-b050-481b-87ab-c0ae09dbda32");
 
                     mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
