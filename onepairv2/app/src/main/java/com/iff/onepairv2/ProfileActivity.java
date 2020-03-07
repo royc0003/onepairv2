@@ -180,7 +180,22 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(ProfileActivity.this, "You are already in your Profile", Toast.LENGTH_LONG).show();
         }
 
-        return true;
+        else if(item.getItemId() == R.id.main_homepage){
+            Intent startIntent = new Intent(ProfileActivity.this, MainActivity.class);
+            startActivity(startIntent);
+        }
+        else if(item.getItemId() == R.id.main_my_deals){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_chat){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_all_users){
+            Intent startIntent = new Intent(ProfileActivity.this, AllUsers.class);
+            startActivity(startIntent);
+        }
+        //return super.onOptionsItemSelected(item);
+        return false;
     }
 
     private void sendToStart() {

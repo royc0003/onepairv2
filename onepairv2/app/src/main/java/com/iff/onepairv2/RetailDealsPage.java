@@ -130,6 +130,20 @@ public class RetailDealsPage extends AppCompatActivity {
             Intent startIntent = new Intent(RetailDealsPage.this, ProfileActivity.class);
             startActivity(startIntent);
         }
+        else if(item.getItemId() == R.id.main_homepage){
+            Intent startIntent = new Intent(RetailDealsPage.this, MainActivity.class);
+            startActivity(startIntent);
+        }
+        else if(item.getItemId() == R.id.main_my_deals){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_chat){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_all_users){
+            Intent startIntent = new Intent(RetailDealsPage.this, AllUsers.class);
+            startActivity(startIntent);
+        }
         //return super.onOptionsItemSelected(item);
         return false;
     }

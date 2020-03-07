@@ -120,7 +120,6 @@ public class FoodDealsPage extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-
         if(item.getItemId() == R.id.main_logout_btn){
             FirebaseAuth.getInstance().signOut();
             sendToStart();
@@ -129,7 +128,21 @@ public class FoodDealsPage extends AppCompatActivity {
             Intent startIntent = new Intent(FoodDealsPage.this, ProfileActivity.class);
             startActivity(startIntent);
         }
-                //return super.onOptionsItemSelected(item);
+        else if(item.getItemId() == R.id.main_homepage){
+            Intent startIntent = new Intent(FoodDealsPage.this, MainActivity.class);
+            startActivity(startIntent);
+        }
+        else if(item.getItemId() == R.id.main_my_deals){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_chat){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_all_users){
+            Intent startIntent = new Intent(FoodDealsPage.this, AllUsers.class);
+            startActivity(startIntent);
+        }
+        //return super.onOptionsItemSelected(item);
         return false;
     }
 
