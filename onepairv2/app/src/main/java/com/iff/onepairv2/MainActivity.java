@@ -7,7 +7,6 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -102,18 +104,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        super.onOptionsItemSelected(item);
+        int id = item.getItemId();
 
         if(item.getItemId() == R.id.main_logout_btn){
             FirebaseAuth.getInstance().signOut();
             sendToStart();
         }
         else if(item.getItemId() == R.id.main_profile_btn){
-            Intent ProfileIntent = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(ProfileIntent);
+            Intent startIntent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(startIntent);
         }
-
-        return true;
+        else if(item.getItemId() == R.id.main_homepage){
+            Toast.makeText(MainActivity.this, "You're at the Homepage", Toast.LENGTH_SHORT).show();
+        }
+        else if(item.getItemId() == R.id.main_my_deals){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_chat){
+            //not yet
+        }
+        else if(item.getItemId() == R.id.main_all_users){
+            Intent startIntent = new Intent(MainActivity.this, AllUsers.class);
+            startActivity(startIntent);
+        }
+        //return super.onOptionsItemSelected(item);
+        return false;
     }
 
     public void onClick(View v) {
@@ -138,4 +153,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
 }

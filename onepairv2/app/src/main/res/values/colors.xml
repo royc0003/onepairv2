@@ -2,8 +2,9 @@
 <resources>
     <color name="colorPrimary">#E1B83A</color>
     <color name="colorPrimaryDark">#DDA654</color>
-    <color name="colorAccent">#41cc8e</color>
+    <color name="colorAccent">#facf8e</color>
     <color name="lightgray">#ededed</color>
+    <color name="chatbghide">#DFDFDF</color>
     <color name="food">#FA6D76</color>
     <color name="entertainment">#FFA450</color>
     <color name="retail">#E7EA71</color>
