@@ -17,10 +17,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -67,14 +67,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
+                        saveToken(token);
 
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);
                         Log.d("token ID", token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+    private void saveToken(String token) {
+        String email = mAuth.getCurrentUser().getEmail();
+        User user = new User(email, token);
+
+        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("UserToken");
+        dbUsers.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(MainActivity.this, "Token saved", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
 
     @Override
     public void onStart() {
