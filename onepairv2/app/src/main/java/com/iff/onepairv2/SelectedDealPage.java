@@ -237,6 +237,7 @@ public class SelectedDealPage extends AppCompatActivity {
        }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void cancelJob(View v){
         JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         scheduler.cancel(123);
