@@ -177,7 +177,16 @@ public class SelectedDealPage extends AppCompatActivity {
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);
                     Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
-                    call.enqueue(new Callback<Void>() {
+                    System.out.println("This is the token ID"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                    Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                    toast.show();
+
+                    //Work on the algo here
+                    ShowPopUp(); // currently working
+                    //I dont quite understand why is there a need to use retrofit here - Royce
+
+                    /*call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(!response.isSuccessful()){
@@ -188,13 +197,14 @@ public class SelectedDealPage extends AppCompatActivity {
                             Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
                             toast.show();
                             // Add matching algo here
+                            //ShowPopUp();
                         }
                         @Override
                         public void onFailure(Call<Void> call, Throwable t) {
                             Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
                             toast.show();
                         }
-                    });
+                    });*/
 
 
                 }
