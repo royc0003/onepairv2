@@ -7,6 +7,12 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import javax.xml.transform.Result;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MyJobService extends JobService {
     private static final String TAG = "MyJobService";
@@ -21,6 +27,14 @@ public class MyJobService extends JobService {
     }
 
     private void doBackgroundWork(final JobParameters params) {
+        //call retrofit here
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://128.199.167.80:8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BackEndController backEndController = retrofit.create(BackEndController.class);
+        Call<Result> call = backEndController.matchTrigger2();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
