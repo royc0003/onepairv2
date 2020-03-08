@@ -184,12 +184,15 @@ public class SelectedDealPage extends AppCompatActivity {
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     BackEndController backEndController2 = retrofit2.create(BackEndController.class);
+                    System.out.println("This is the current user's token: "+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    System.out.println("This is the current user's dealID: "+ deal.getId());
+                    System.out.println("This is the current user's location: "+ c);
                     Call<Void> call2 = backEndController2.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
                     call2.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(!response.isSuccessful()){
-                                System.out.println("Oops something went wrong!");
+                                System.out.println("Unable to addRequest into Server****!");
                                 return;
                             }
                             Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
@@ -204,9 +207,6 @@ public class SelectedDealPage extends AppCompatActivity {
 
 
 
-
-
-
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
                             .addConverterFactory(GsonConverterFactory.create())
@@ -217,7 +217,7 @@ public class SelectedDealPage extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Results> call, Response<Results> response) {
                             if(!response.isSuccessful()){ //not successful result therefore schedulejob
-                                System.out.println("Unable to find match");
+                                System.out.println("Unable to find match; moving to scheduler");
                                  // calls for scheduler**Note it's possible to move this elsewhere**
                                 isSuccessfulCheck = false;
                                 return; // exits onResponse
@@ -228,11 +228,9 @@ public class SelectedDealPage extends AppCompatActivity {
                             uid2 = results.getUid2(); // returned results
                             ShowPopUp(uid1,uid2);
                         }
-
                         @Override
                         public void onFailure(Call<Results> call, Throwable t) {
-                            Context context = null;
-                            Toast.makeText(context,t.toString(),Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SelectedDealPage.this,t.toString(),Toast.LENGTH_SHORT).show();
                             System.out.println("Re-run matchTrigger2 again...");
 
                         }});
