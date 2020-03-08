@@ -36,6 +36,7 @@
 
         <!--Data rom database goes into the following-->
         <ImageView
+            android:id="@+id/match_profile_image"
             android:layout_width="370dp"
             android:layout_height="147dp"
             android:layout_gravity="center"
@@ -43,6 +44,7 @@
             android:src="@drawable/gracecropped" />
 
         <TextView
+            android:id="@+id/match_Username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +49,8 @@ public class SelectedDealPage extends AppCompatActivity {
     private TextView termsCondition;
     private TextView startEnd;
     private ArrayList<Location> locations;
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference mUserDatabase;
 
     private Deal deal;
     private static final String TAG = "MainActivity";
@@ -237,8 +240,8 @@ public class SelectedDealPage extends AppCompatActivity {
         Button chatBtn;
         myDialog.setContentView(R.layout.matchpopup);
         txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
-        chatBtn = (Button) myDialog.findViewById(R.id.chatBt); //link this button to Nick's
-        matchProfileImage = (ImageView) myDialog.findViewById(R.id.match_profile_name);
+        chatBtn = (Button) myDialog.findViewById(R.id.chatBtn); //link this button to Nick's
+        matchProfileImage = (ImageView) myDialog.findViewById(R.id.match_profile_image);
         matchUserName = (TextView) myDialog.findViewById(R.id.match_Username);
         DatabaseReference trialData = getDatabaseReference();
         trialData.addValueEventListener(new ValueEventListener() {
