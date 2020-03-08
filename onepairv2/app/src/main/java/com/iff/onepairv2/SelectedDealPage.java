@@ -179,16 +179,33 @@ public class SelectedDealPage extends AppCompatActivity {
                             c += x;
                         }
                     }
-                    /*Retrofit retrofit = new Retrofit.Builder()
+                    Retrofit retrofit2 = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
-                    BackEndController backEndController = retrofit.create(BackEndController.class);
-                    Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);*/
-                    System.out.println("This is the token ID"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    BackEndController backEndController2 = retrofit2.create(BackEndController.class);
+                    Call<Void> call2 = backEndController2.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
+                    call2.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(!response.isSuccessful()){
+                                System.out.println("Oops something went wrong!");
+                                return;
+                            }
+                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
 
-                    Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
-                    toast.show();
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            System.out.println("Oops something went wrong!");
+                        }
+                    });
+
+
+
+
+
 
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
