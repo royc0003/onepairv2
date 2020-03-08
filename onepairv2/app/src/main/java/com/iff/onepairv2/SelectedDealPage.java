@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -51,6 +52,8 @@ public class SelectedDealPage extends AppCompatActivity {
     private ArrayList<Location> locations;
     private FirebaseUser mCurrentUser;
     private DatabaseReference mUserDatabase;
+    private boolean isSuccessfulCheck =true;
+    private String uid1, uid2;
 
     private Deal deal;
     private static final String TAG = "MainActivity";
@@ -150,6 +153,7 @@ public class SelectedDealPage extends AppCompatActivity {
          } **/
 
         myBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 StringBuilder sb = new StringBuilder();
@@ -175,19 +179,65 @@ public class SelectedDealPage extends AppCompatActivity {
                             c += x;
                         }
                     }
-                    Retrofit retrofit = new Retrofit.Builder()
+                    /*Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);
-                    Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
+                    Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);*/
                     System.out.println("This is the token ID"+FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                     Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
                     toast.show();
 
-                    //Work on the algo here
-                    ShowPopUp(); // currently working
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("http://128.199.167.80:8080/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    BackEndController backEndController = retrofit.create(BackEndController.class);
+                    Call<Results> call = backEndController.matchTrigger2();
+                    call.enqueue(new Callback<Results>() {
+                        @Override
+                        public void onResponse(Call<Results> call, Response<Results> response) {
+                            if(!response.isSuccessful()){ //not successful result therefore schedulejob
+                                System.out.println("Unable to find match");
+                                 // calls for scheduler**Note it's possible to move this elsewhere**
+                                isSuccessfulCheck = false;
+                                return; // exits onResponse
+                            }
+                            //successfully found
+                            Results results = response.body();
+                            uid1 = results.getUid1(); // returned results
+                            uid2 = results.getUid2(); // returned results
+                            ShowPopUp(uid1,uid2);
+                        }
+
+                        @Override
+                        public void onFailure(Call<Results> call, Throwable t) {
+                            Context context = null;
+                            Toast.makeText(context,t.toString(),Toast.LENGTH_SHORT).show();
+                            System.out.println("Re-run matchTrigger2 again...");
+
+                        }});
+
+                    if(!isSuccessfulCheck){ // if the first round isn't successful continue to matchAlgo
+                        scheduleJob();
+                    }
+
+                    int isSuccessful;
+                    Intent intent = getIntent();
+                    isSuccessful = intent.getIntExtra("isSuccessful",0);
+                    if(isSuccessful == 1){
+                         uid1 = intent.getStringExtra("String_uID1");
+                         uid2 = intent.getStringExtra("String_uID2");
+                         ShowPopUp(uid1,uid2);
+                    }
+
+                     // only if first match not successful
+                    //Create a button to cancel the job; that's the only way to be able to cancel
+
+
+                     // currently working
                     //I dont quite understand why is there a need to use retrofit here - Royce
 
                     /*call.enqueue(new Callback<Void>() {
@@ -220,20 +270,27 @@ public class SelectedDealPage extends AppCompatActivity {
         //show dialog
         alertDialog.show();
     }
-    public DatabaseReference getDatabaseReference(){ // this is to be included into the popup
+    public DatabaseReference getDatabaseReference(String matchedUID){ // this is to be included into the popup
         //for now work with 1 userid assuming this current user is a match
         //accessing user database
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String current_uid = mCurrentUser.getUid();
+        String current_uid = matchedUID;
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         return mUserDatabase;
     }
 
     //Once a match is made by system, this pop up box will appear
-    public void ShowPopUp() {
+    public void ShowPopUp(String Uid1, String Uid2) {
         //accepts 2 tokens from getUserID
         //with the 2 userIDs; check if one of them is theirs if it is
         //use the other token to display the image and details and everything
+        String checkUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String matchedUID;
+        if(checkUID == Uid1){
+            matchedUID = Uid2;
+        }else{
+            matchedUID = Uid1;
+        }
+
         System.out.println("INSIDE SHOW POP UP");
         final TextView txtclose, matchUserName;
         final ImageView matchProfileImage;
@@ -243,7 +300,7 @@ public class SelectedDealPage extends AppCompatActivity {
         chatBtn = (Button) myDialog.findViewById(R.id.chatBtn); //link this button to Nick's
         matchProfileImage = (ImageView) myDialog.findViewById(R.id.match_profile_image);
         matchUserName = (TextView) myDialog.findViewById(R.id.match_Username);
-        DatabaseReference trialData = getDatabaseReference();
+        DatabaseReference trialData = getDatabaseReference(matchedUID);
         trialData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -254,11 +311,9 @@ public class SelectedDealPage extends AppCompatActivity {
                 matchUserName.setText(name);
                 Picasso.get().load(image).into(matchProfileImage);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 System.out.println("Not able to access the database");
-
             }
         });
 
@@ -274,7 +329,7 @@ public class SelectedDealPage extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void scheduleJob(View v){
+    public void scheduleJob(){
         ComponentName componentName = new ComponentName(this, MyJobService.class);
         JobInfo info = new JobInfo.Builder(123, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED) //any network

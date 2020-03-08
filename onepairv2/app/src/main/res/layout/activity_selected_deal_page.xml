@@ -93,6 +93,23 @@
             app:layout_constraintTop_toBottomOf="@+id/startend"
             app:layout_constraintVertical_bias="0.74" />
 
+        <Button
+            android:id="@+id/cancelMatchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_dark"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Cancel Match"
+            android:textColor="#FFFEFE"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.971"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startend"
+            app:layout_constraintVertical_bias="0.0"
+            android:onClick="cancelJob"/>
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
