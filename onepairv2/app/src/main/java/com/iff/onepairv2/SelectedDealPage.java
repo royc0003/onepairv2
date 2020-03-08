@@ -6,14 +6,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,6 +41,9 @@ public class SelectedDealPage extends AppCompatActivity {
     private TextView termsCondition;
     private TextView startEnd;
     private ArrayList<Location> locations;
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference mUserDatabase;
+
 
     private Deal deal;
 
@@ -90,6 +102,7 @@ public class SelectedDealPage extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("TESTTTTT");
                 locationAlertBox();
+
             }
         });
     }
@@ -133,13 +146,63 @@ public class SelectedDealPage extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 StringBuilder sb = new StringBuilder();
-                for (Object nebular : selectedLocations) {
-                    sb.append(nebular.toString() + "\n");
+                if (selectedLocations.size() == 0)
+                {
+                    Toast toast = Toast.makeText(SelectedDealPage.this, "Please select at least one location.", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
-                Toast.makeText(SelectedDealPage.this, sb.toString(), Toast.LENGTH_SHORT).show();
-                System.out.println("LOcation button clicksed");
-                ShowPopUp();
+                else {
+                    /*
+                    for (Object nebular : selectedLocations) {
+                        sb.append(nebular.toString() + "\n");
+                    }
+                    Toast.makeText(SelectedDealPage.this, sb.toString(), Toast.LENGTH_SHORT).show();
+                    System.out.println("LOcation button clicksed");
+                    ShowPopUp();*/
+                    String c = "";
+                    for(int j = 0; j < selectedKey.size(); j++){
+                        if(j == selectedKey.size()-1){
+                            c += Integer.toString(selectedKey.get(j));
+                        }else{
+                            String x = Integer.toString(selectedKey.get(j)) + ",";
+                            c += x;
+                        }
+                    }
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("http://128.199.167.80:8080/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    BackEndController backEndController = retrofit.create(BackEndController.class);
+                    Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
+                    System.out.println("This is the token ID"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                    toast.show();
+                    //Work on the algo here
+                    ShowPopUp(); // currently working
+                    //I dont quite understand why is there a need to use retrofit here - Royce
 
+                    /*call.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(!response.isSuccessful()){
+                                Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                                toast.show();
+                                return;
+                            }
+                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                            toast.show();
+                            // Add matching algo here
+                            //ShowPopUp();
+                        }
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    });*/
+
+
+                }
             }
         });
 
@@ -150,13 +213,50 @@ public class SelectedDealPage extends AppCompatActivity {
     }
 
     //Once a match is made by system, this pop up box will appear
+    //with the assumption that the tokens can be retrieved from the firebase
+
+    public DatabaseReference getDatabaseReference(){ // this is to be included into the popup
+        //for now work with 1 userid assuming this current user is a match
+        //accessing user database
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String current_uid = mCurrentUser.getUid();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        return mUserDatabase;
+    }
+
     public void ShowPopUp() {
+        //accepts 2 tokens from getUserID
+        //with the 2 userIDs; check if one of them is theirs if it is
+        //use the other token to display the image and details and everything
         System.out.println("INSIDE SHOW POP UP");
-        TextView txtclose;
+        final TextView txtclose, matchUserName;
+        final ImageView matchProfileImage;
         Button chatBtn;
         myDialog.setContentView(R.layout.matchpopup);
         txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
-        chatBtn = (Button) myDialog.findViewById(R.id.chatBtn);
+        chatBtn = (Button) myDialog.findViewById(R.id.chatBt); //link this button to Nick's
+        matchProfileImage = (ImageView) myDialog.findViewById(R.id.match_profile_name);
+        matchUserName = (TextView) myDialog.findViewById(R.id.match_Username);
+        DatabaseReference trialData = getDatabaseReference();
+        trialData.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("name").getValue().toString();
+                String image = dataSnapshot.child("image").getValue().toString();
+                String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+
+                matchUserName.setText(name);
+                Picasso.get().load(image).into(matchProfileImage);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Not able to access the database");
+
+            }
+        });
+
+
         System.out.println("Chat Button clicked");
         txtclose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +267,12 @@ public class SelectedDealPage extends AppCompatActivity {
         myDialog.show();
     }
 
+    /*
+
+    public String name;
+    public String uid;
+    public String image;    *
+    */
 
 
 
