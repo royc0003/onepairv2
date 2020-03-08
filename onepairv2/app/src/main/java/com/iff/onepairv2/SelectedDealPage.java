@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -215,6 +216,14 @@ public class SelectedDealPage extends AppCompatActivity {
         alertDialog = myBuilder.create();
         //show dialog
         alertDialog.show();
+    }
+    public DatabaseReference getDatabaseReference(){ // this is to be included into the popup
+        //for now work with 1 userid assuming this current user is a match
+        //accessing user database
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String current_uid = mCurrentUser.getUid();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        return mUserDatabase;
     }
 
     //Once a match is made by system, this pop up box will appear
