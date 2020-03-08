@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -174,9 +175,11 @@ public class SelectedDealPage extends AppCompatActivity {
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);
                     Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
-                    System.out.println("This is the token ID"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            System.out.println("This is the token ID"+FirebaseAuth.getInstance().getCurrentUser().getUid());
+
                     Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
                     toast.show();
+
                     //Work on the algo here
                     ShowPopUp(); // currently working
                     //I dont quite understand why is there a need to use retrofit here - Royce
