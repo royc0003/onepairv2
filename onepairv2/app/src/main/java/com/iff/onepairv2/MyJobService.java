@@ -2,14 +2,18 @@ package com.iff.onepairv2;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
 import javax.xml.transform.Result;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -34,6 +38,23 @@ public class MyJobService extends JobService {
                 .build();
         BackEndController backEndController = retrofit.create(BackEndController.class);
         Call<Result> call = backEndController.matchTrigger2();
+        call.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                if(response.isSuccessful()){
+                    Results results = (Results) response.body();
+                    String uID1 = results.getUid1();
+                    String uID2 = results.getUid2();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Context context = null;
+                Toast.makeText(context,t.toString(),Toast.LENGTH_SHORT).show();
+            }
+        });
 
         new Thread(new Runnable() {
             @Override
