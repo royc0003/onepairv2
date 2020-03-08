@@ -36,4 +36,7 @@ public interface BackEndController {
 
     @GET("getAllLocation")
     Call<ArrayList<Location>> getAllLocation();
+
+    @GET("updateToken/{uid}/{token}")
+    Call<Void> updateToken(@Path("uid") String uid, @Path("token") String token);
 }
