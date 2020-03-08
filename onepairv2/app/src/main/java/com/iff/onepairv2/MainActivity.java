@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -79,16 +88,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void saveToken(String token) {
         String email = mAuth.getCurrentUser().getEmail();
-        User user = new User(email, token);
+        final User user = new User(email, token);
 
-        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("UserToken");
-        dbUsers.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>()
-        {
+        // Update django db too
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://128.199.167.80:8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BackEndController backEndController = retrofit.create(BackEndController.class);
+        Call<Void> call = backEndController.updateToken(mAuth.getCurrentUser().getUid(), token);
+        //System.out.print(token);
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(MainActivity.this, "Token saved", Toast.LENGTH_LONG).show();
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(!response.isSuccessful()){
+                    System.out.println("Oops something went wrong!");
+                    return;
                 }
+                DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("UserToken");
+                dbUsers.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(MainActivity.this, "Token saved", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                System.out.println("Oops something went wrong!");
             }
         });
 
