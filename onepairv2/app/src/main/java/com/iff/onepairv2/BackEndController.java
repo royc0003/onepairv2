@@ -2,6 +2,8 @@ package com.iff.onepairv2;
 
 import java.util.ArrayList;
 
+import javax.xml.transform.Result;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -39,4 +41,8 @@ public interface BackEndController {
 
     @GET("updateToken/{uid}/{token}")
     Call<Void> updateToken(@Path("uid") String uid, @Path("token") String token);
+
+    @GET("matchTrigger2")
+    Call<Result> matchTrigger2();
+
 }
