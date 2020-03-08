@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -204,12 +209,38 @@ public class SelectedDealPage extends AppCompatActivity {
 
     //Once a match is made by system, this pop up box will appear
     public void ShowPopUp() {
+        //accepts 2 tokens from getUserID
+        //with the 2 userIDs; check if one of them is theirs if it is
+        //use the other token to display the image and details and everything
         System.out.println("INSIDE SHOW POP UP");
-        TextView txtclose;
+        final TextView txtclose, matchUserName;
+        final ImageView matchProfileImage;
         Button chatBtn;
         myDialog.setContentView(R.layout.matchpopup);
         txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
-        chatBtn = (Button) myDialog.findViewById(R.id.chatBtn);
+        chatBtn = (Button) myDialog.findViewById(R.id.chatBt); //link this button to Nick's
+        matchProfileImage = (ImageView) myDialog.findViewById(R.id.match_profile_name);
+        matchUserName = (TextView) myDialog.findViewById(R.id.match_Username);
+        DatabaseReference trialData = getDatabaseReference();
+        trialData.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("name").getValue().toString();
+                String image = dataSnapshot.child("image").getValue().toString();
+                String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+
+                matchUserName.setText(name);
+                Picasso.get().load(image).into(matchProfileImage);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Not able to access the database");
+
+            }
+        });
+
+
         System.out.println("Chat Button clicked");
         txtclose.setOnClickListener(new View.OnClickListener() {
             @Override
