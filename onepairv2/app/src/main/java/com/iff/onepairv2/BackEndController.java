@@ -43,6 +43,6 @@ public interface BackEndController {
     Call<Void> updateToken(@Path("uid") String uid, @Path("token") String token);
 
     @GET("matchTrigger2")
-    Call<Result> matchTrigger2();
+    Call<Results> matchTrigger2();
 
 }
