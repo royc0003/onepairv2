@@ -173,6 +173,29 @@ public class SelectedDealPage extends AppCompatActivity {
                         public void onDismiss(DialogInterface dialog) {
                             if(MyFirebaseMessagingService.matched == 0){
                                 //JOZUA ADD YOUR CODE HERE TO REMOVE THIS PERSON'S REQUEST
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl("http://128.199.167.80:8080/")
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+                                BackEndController backEndController = retrofit.create(BackEndController.class);
+                                Call<Void> call = backEndController.deleteRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId());
+                                call.enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if(!response.isSuccessful()){
+                                            Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                            return;
+                                        }
+                                        Toast toast = Toast.makeText(SelectedDealPage.this, "Unable to find a match. Your request has been removed from wait list.", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                });
                             }
                         }
                     });
