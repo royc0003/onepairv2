@@ -38,7 +38,7 @@ public class SelectedDealPage extends AppCompatActivity {
     private TextView startEnd;
     private ArrayList<Location> locations;
 
-    private ProgressDialog mQueueProgress;
+    public static ProgressDialog mQueueProgress;
 
     private Deal deal;
 
@@ -163,14 +163,17 @@ public class SelectedDealPage extends AppCompatActivity {
                         }
                     }
 
-                    //Add Dialog
+                    //Add Dialog to halt user
                     mQueueProgress = new ProgressDialog(SelectedDealPage.this);
-                    mQueueProgress.setTitle("Loading");
+                    mQueueProgress.setTitle("Finding you a match!");
                     mQueueProgress.setMessage("This may take a while");
                     mQueueProgress.setCanceledOnTouchOutside(false);
+
+                    //Dismiss listener
                     mQueueProgress.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
+                            //if dismissed when match is not found, remove request from server
                             if(MyFirebaseMessagingService.matched == 0){
                                 //JOZUA ADD YOUR CODE HERE TO REMOVE THIS PERSON'S REQUEST
                                 Retrofit retrofit = new Retrofit.Builder()
@@ -187,7 +190,8 @@ public class SelectedDealPage extends AppCompatActivity {
                                             toast.show();
                                             return;
                                         }
-                                        Toast toast = Toast.makeText(SelectedDealPage.this, "Unable to find a match. Your request has been removed from wait list.", Toast.LENGTH_SHORT);
+                                        //if successfully remove request
+                                        Toast toast = Toast.makeText(SelectedDealPage.this, "Your request has been removed from wait list.", Toast.LENGTH_SHORT);
                                         toast.show();
                                     }
                                     @Override
@@ -197,17 +201,22 @@ public class SelectedDealPage extends AppCompatActivity {
                                     }
                                 });
                             }
+                            //if dismissed when match is found, change variable back to 0
+                            if(MyFirebaseMessagingService.matched == 1){
+                                MyFirebaseMessagingService.matched = 0;
+                            }
                         }
                     });
+
+                    //Button in dialog to cancel matching
                     mQueueProgress.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mQueueProgress.dismiss();//dismiss dialog
                         }
                     });
-                    mQueueProgress.show();
 
-
+                    //add Request to server on click
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
                             .addConverterFactory(GsonConverterFactory.create())
@@ -223,8 +232,10 @@ public class SelectedDealPage extends AppCompatActivity {
                                 toast.show();
                                 return;
                             }
-                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
-                            toast.show();
+                            //Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                            //toast.show();
+                            //Show Dialog when request is added, so server finds for a match
+                            mQueueProgress.show();
                             // Add matching algo here
                         }
                         @Override
