@@ -1,13 +1,20 @@
 package com.iff.onepairv2;
 
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,19 +55,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 JSONObject user1 = new JSONObject(obj2.getString("user1"));
                 JSONObject user2 = new JSONObject(obj2.getString("user2"));
                 JSONObject deal = new JSONObject(obj2.getString("deal"));
-                String location = obj2.getString("locations");
+                final String location = obj2.getString("locations");
                 String uid1 = user1.getString("uid");
                 String uid2 = user2.getString("uid");
-                String dealName = deal.getString("name");
-                String message = "";
+                final String dealName = deal.getString("name");
+
+                DatabaseReference mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
                 if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(uid1)){
-                    String username = FirebaseDatabase.getInstance().getReference().child("Users").child(uid2).child("name").toString();
+                    mUserDatabase = mUserDatabase.child(uid2);
                 }else{
-                    String username = FirebaseDatabase.getInstance().getReference().child("Users").child(uid1).child("name").toString();
-                    System.out.println("You have matched with" + username);
+                    mUserDatabase = mUserDatabase.child(uid1);
                 }
-                System.out.println("on the deal " + dealName);
-                System.out.println("at " + location);
+
+                mUserDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String message = "";
+                        String username = dataSnapshot.child("name").getValue().toString();
+                        String image = dataSnapshot.child("image").getValue().toString();
+                        String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+                        message += "Found a match with ";
+                        message += username;
+                        message += " on ";
+                        message += dealName;
+                        message += " at ";
+                        message += location;
+                        
+
+                        // Replace with popup soon
+                        Toast toast = Toast.makeText(MyFirebaseMessagingService.this, message, Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }catch (Exception err){
                 Log.d("Error", err.toString());
             }
