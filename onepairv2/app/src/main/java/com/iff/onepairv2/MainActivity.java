@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
-                        saveToken(token);
+                        //saveToken(token);
 
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);

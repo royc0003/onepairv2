@@ -197,6 +197,7 @@ public class SelectedDealPage extends AppCompatActivity {
                             }
                             Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
                             toast.show();
+                            System.out.println("Successfully added to wait list");
                         }
 
                         @Override
@@ -232,6 +233,7 @@ public class SelectedDealPage extends AppCompatActivity {
                         public void onFailure(Call<Results> call, Throwable t) {
                             //Toast.makeText(SelectedDealPage.this,t.toString(),Toast.LENGTH_SHORT).show();
                             System.out.println("Re-run matchTrigger2 again...");
+                            System.out.println("this is throwable:"+ t);
 
                         }});
 

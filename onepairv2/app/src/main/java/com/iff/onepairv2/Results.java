@@ -11,6 +11,10 @@ public class Results {
     @SerializedName("uid2")
     @Expose
     private String uID2;
+    public Results(String uID1, String uID2){
+        this.uID1 = uID1;
+        this.uID2 = uID2;
+    }
 
 
     public String getUid1(){
