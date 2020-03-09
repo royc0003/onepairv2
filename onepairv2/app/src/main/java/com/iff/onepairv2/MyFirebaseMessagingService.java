@@ -2,8 +2,16 @@ package com.iff.onepairv2;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -34,6 +42,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d("TAG", "Message data payload: " + remoteMessage.getData());
+            try {
+                JSONObject obj = new JSONObject(remoteMessage.getData());
+                JSONObject obj2 = new JSONObject(obj.getString("body"));
+                JSONObject user1 = new JSONObject(obj2.getString("user1"));
+                JSONObject user2 = new JSONObject(obj2.getString("user2"));
+                JSONObject deal = new JSONObject(obj2.getString("deal"));
+                String location = obj2.getString("locations");
+                String uid1 = user1.getString("uid");
+                String uid2 = user2.getString("uid");
+                String dealName = deal.getString("name");
+                String message = "";
+                if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(uid1)){
+                    String username = FirebaseDatabase.getInstance().getReference().child("Users").child(uid2).child("name").toString();
+                }else{
+                    String username = FirebaseDatabase.getInstance().getReference().child("Users").child(uid1).child("name").toString();
+                    System.out.println("You have matched with" + username);
+                }
+                System.out.println("on the deal " + dealName);
+                System.out.println("at " + location);
+            }catch (Exception err){
+                Log.d("Error", err.toString());
+            }
+
 
             if (/* Check if data needs to be processed by long running job */ true) {
                 // For long-running tasks (10 seconds or more) use WorkManager.
@@ -41,6 +72,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else {
                 // Handle message within 10 seconds
                 //s handleNow();
+
             }
 
         }
@@ -49,11 +81,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
-            //Log.d("TAG", "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.d("TAG", "Message Notification Body: " + remoteMessage.getNotification().getBody());
             NotificationHelper.displayNotification(getApplicationContext(), title, body);
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
+
+
 }

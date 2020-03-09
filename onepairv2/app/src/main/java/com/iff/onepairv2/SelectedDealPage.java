@@ -164,11 +164,12 @@ public class SelectedDealPage extends AppCompatActivity {
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);
                     Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
+                    System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(!response.isSuccessful()){
-                                Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
                                 toast.show();
                                 return;
                             }
@@ -193,25 +194,6 @@ public class SelectedDealPage extends AppCompatActivity {
         //show dialog
         alertDialog.show();
     }
-
-    //Once a match is made by system, this pop up box will appear
-    public void ShowPopUp() {
-        System.out.println("INSIDE SHOW POP UP");
-        TextView txtclose;
-        Button chatBtn;
-        myDialog.setContentView(R.layout.matchpopup);
-        txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
-        chatBtn = (Button) myDialog.findViewById(R.id.chatBtn);
-        System.out.println("Chat Button clicked");
-        txtclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-            }
-        });
-        myDialog.show();
-    }
-
 
 
 
