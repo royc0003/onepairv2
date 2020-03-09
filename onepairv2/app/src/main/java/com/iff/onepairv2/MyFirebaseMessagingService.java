@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    static int matched = 0;
+
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -83,8 +85,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         
 
                         // Replace with popup soon
+                        matched = 1;
                         Toast toast = Toast.makeText(MyFirebaseMessagingService.this, message, Toast.LENGTH_LONG);
                         toast.show();
+                        matched = 0;
                     }
 
                     @Override

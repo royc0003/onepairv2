@@ -61,8 +61,6 @@ public class AllUsers extends AppCompatActivity {
         Loading.setMessage("This may take a while");
         Loading.setCanceledOnTouchOutside(false);
         Loading.show();
-
-
     }
 
     @Override

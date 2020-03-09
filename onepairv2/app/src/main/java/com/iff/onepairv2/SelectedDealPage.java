@@ -2,6 +2,7 @@ package com.iff.onepairv2;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,8 @@ public class SelectedDealPage extends AppCompatActivity {
     private TextView termsCondition;
     private TextView startEnd;
     private ArrayList<Location> locations;
+
+    private ProgressDialog mQueueProgress;
 
     private Deal deal;
 
@@ -158,6 +162,29 @@ public class SelectedDealPage extends AppCompatActivity {
                             c += x;
                         }
                     }
+
+                    //Add Dialog
+                    mQueueProgress = new ProgressDialog(SelectedDealPage.this);
+                    mQueueProgress.setTitle("Loading");
+                    mQueueProgress.setMessage("This may take a while");
+                    mQueueProgress.setCanceledOnTouchOutside(false);
+                    mQueueProgress.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if(MyFirebaseMessagingService.matched == 0){
+                                //JOZUA ADD YOUR CODE HERE TO REMOVE THIS PERSON'S REQUEST
+                            }
+                        }
+                    });
+                    mQueueProgress.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mQueueProgress.dismiss();//dismiss dialog
+                        }
+                    });
+                    mQueueProgress.show();
+
+
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
                             .addConverterFactory(GsonConverterFactory.create())
