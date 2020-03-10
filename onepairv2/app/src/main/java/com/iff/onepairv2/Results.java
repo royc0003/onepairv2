@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class Results {
 
-    @SerializedName("uid1")
-    @Expose
+  /*  @SerializedName("uid1")
+    @Expose*/
     private String uID1;
-    @SerializedName("uid2")
-    @Expose
+  /*  @SerializedName("uid2")
+    @Expose */
     private String uID2;
     public Results(String uID1, String uID2){
         this.uID1 = uID1;

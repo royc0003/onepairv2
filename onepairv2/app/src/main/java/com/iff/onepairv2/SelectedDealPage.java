@@ -41,8 +41,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class SelectedDealPage extends AppCompatActivity {
+public class SelectedDealPage extends AppCompatActivity{
     Dialog myDialog;
     AlertDialog alertDialog;
     private TextView dealsDetail;
@@ -54,6 +55,7 @@ public class SelectedDealPage extends AppCompatActivity {
     private DatabaseReference mUserDatabase;
     private boolean isSuccessfulCheck =true;
     private String uid1, uid2;
+
 
     private Deal deal;
     private static final String TAG = "MainActivity";
@@ -210,6 +212,7 @@ public class SelectedDealPage extends AppCompatActivity {
 
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
+                            .addConverterFactory(ScalarsConverterFactory.create())
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);
@@ -232,7 +235,7 @@ public class SelectedDealPage extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<Results> call, Throwable t) {
                             //Toast.makeText(SelectedDealPage.this,t.toString(),Toast.LENGTH_SHORT).show();
-                            System.out.println("Re-run matchTrigger2 again...");
+                            System.out.println("State is now at onFailure... again...");
                             System.out.println("this is throwable:"+ t);
 
                         }});
