@@ -215,8 +215,6 @@ public class SelectedDealPage extends AppCompatActivity {
                             mQueueProgress.dismiss();//dismiss dialog
                         }
                     });
-                    
-                    mQueueProgress.show();
 
                     //add Request to server on click
                     Retrofit retrofit = new Retrofit.Builder()
@@ -237,6 +235,7 @@ public class SelectedDealPage extends AppCompatActivity {
                             //Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
                             //toast.show();
                             //Show Dialog when request is added, so server finds for a match
+                            mQueueProgress.show();
                             // Add matching algo here
                         }
                         @Override
