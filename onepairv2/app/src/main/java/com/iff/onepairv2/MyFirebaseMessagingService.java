@@ -85,10 +85,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         
 
                         // Replace with popup soon
-                        matched = 1;
-                        Toast toast = Toast.makeText(MyFirebaseMessagingService.this, message, Toast.LENGTH_LONG);
+                        matched = 1; // match is found, hence matched = 1
+                        SelectedDealPage.mQueueProgress.dismiss(); //dimiss dialog when match is found
+                        Toast toast = Toast.makeText(MyFirebaseMessagingService.this, message, Toast.LENGTH_LONG); 
                         toast.show();
-                        matched = 0;
                     }
 
                     @Override
