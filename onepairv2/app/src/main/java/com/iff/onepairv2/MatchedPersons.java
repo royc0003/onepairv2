@@ -19,13 +19,10 @@ import java.util.ArrayList;
 
 public class MatchedPersons extends AppCompatActivity {
 
-
     private FirebaseAuth mAuth;
     private static MatchedPersons single_instance = null;
-    private static int numberOfMatches = 0;
-    DatabaseReference reff, reff2, reff3;
+    DatabaseReference reff, reff2;
 
-    static ArrayList<Users> matchedPersons = new ArrayList<Users>();
     private Toolbar mToolbar;
     ListView listView;
     ListViewAdapter2 adapter;
@@ -36,7 +33,6 @@ public class MatchedPersons extends AppCompatActivity {
     ArrayList<String> uid = new ArrayList<String>();
     ArrayList<String> image = new ArrayList<String>();
     ArrayList<ChatUser> arrayList = new ArrayList<ChatUser>();
-    ArrayList<String> pushKeys = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +45,6 @@ public class MatchedPersons extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
 
-
         mAuth = FirebaseAuth.getInstance();
         String currentUID = mAuth.getCurrentUser().getUid();
         System.out.println("GET CURRENT USER UID " + currentUID);
@@ -60,14 +55,9 @@ public class MatchedPersons extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
-                    System.out.println("TEET " + chatSnapshot.getKey());
                     matchUIDs.add(chatSnapshot.getKey());
-                    //System.out.println("TEEET " + matchUIDs.get(0));
                 }
-                for(String m: matchUIDs)
-                {
-                    System.out.println("MATCHHH UID " + m);
-                }
+
                 //retrieve all data from database
                 reff = FirebaseDatabase.getInstance().getReference().child("Users");
                 reff.addValueEventListener(new ValueEventListener() {
@@ -78,11 +68,7 @@ public class MatchedPersons extends AppCompatActivity {
                             //append to allUID array list
                             Users users = ds.getValue(Users.class);
                             allUsers.add(users);
-                            System.out.println("USERNAME " + users.getName());
                         }
-
-                        System.out.println("muid " + matchUIDs.get(0));
-                        System.out.println("muid2 " + allUsers.get(0).getName());
 
                         for (int i = matchUIDs.size() - 1; i > 0; i--) {
                             for (int j = i - 1; j >= 0; j--) {
@@ -93,14 +79,8 @@ public class MatchedPersons extends AppCompatActivity {
                             }
                         }
 
-                        //System.out.println("SIZE " + matchUIDs.size());
-
                         for (String muid : matchUIDs) {
-                            System.out.println("MUIDDD " + muid);
-
                             for (Users u : allUsers) {
-                                System.out.println("USERRR: " + u.getUid());
-
                                 if (muid.equals(u.getUid())) {
                                     name.add(u.getName());
                                     uid.add(u.getUid());
@@ -112,7 +92,6 @@ public class MatchedPersons extends AppCompatActivity {
 
                         for (int i = 0; i < name.size(); i++) {
                             ChatUser model = new ChatUser(name.get(i), uid.get(i), image.get(i));
-                            System.out.println("MODEL ADDED");
                             //bind all strings in an array
                             arrayList.add(model);
                         }
@@ -133,7 +112,6 @@ public class MatchedPersons extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
@@ -145,9 +123,6 @@ public class MatchedPersons extends AppCompatActivity {
         System.out.println("GOT INSTANCE");
         return single_instance;
     }
-
-
-
 }
 
 
