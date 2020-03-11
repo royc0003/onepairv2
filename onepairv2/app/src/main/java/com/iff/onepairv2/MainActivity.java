@@ -170,10 +170,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_homepage){
-            Toast.makeText(MainActivity.this, "You're at the Homepage", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You're already in the Homepage", Toast.LENGTH_SHORT).show();
         }
         else if(item.getItemId() == R.id.main_chat){
-            //not yet
             Intent startIntent = new Intent(MainActivity.this, MatchedPersons.class);
             startActivity(startIntent);
         }

@@ -185,7 +185,6 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_chat){
-            //not yet
             Intent startIntent = new Intent(ProfileActivity.this, MatchedPersons.class);
             startActivity(startIntent);
         }

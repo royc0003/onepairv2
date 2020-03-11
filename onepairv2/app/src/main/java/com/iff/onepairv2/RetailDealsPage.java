@@ -135,7 +135,6 @@ public class RetailDealsPage extends AppCompatActivity {
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_chat){
-            //not yet
             Intent startIntent = new Intent(RetailDealsPage.this, MatchedPersons.class);
             startActivity(startIntent);
         }

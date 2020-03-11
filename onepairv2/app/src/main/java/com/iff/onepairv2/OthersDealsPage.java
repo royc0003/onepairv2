@@ -134,7 +134,6 @@ public class OthersDealsPage extends AppCompatActivity {
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_chat){
-            //not yet
             Intent startIntent = new Intent(OthersDealsPage.this, MatchedPersons.class);
             startActivity(startIntent);
         }

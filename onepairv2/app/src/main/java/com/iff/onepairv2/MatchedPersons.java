@@ -1,7 +1,11 @@
 package com.iff.onepairv2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -123,6 +127,47 @@ public class MatchedPersons extends AppCompatActivity {
         System.out.println("GOT INSTANCE");
         return single_instance;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(item.getItemId() == R.id.main_logout_btn){
+            FirebaseAuth.getInstance().signOut();
+            sendToStart();
+        }
+        else if(item.getItemId() == R.id.main_profile_btn){
+            Intent startIntent = new Intent(MatchedPersons.this, ProfileActivity.class);
+            startActivity(startIntent);
+        }
+        else if(item.getItemId() == R.id.main_homepage){
+            Intent startIntent = new Intent(MatchedPersons.this, MainActivity.class);
+            startActivity(startIntent);
+        }
+        else if(item.getItemId() == R.id.main_chat){
+            Toast.makeText(MatchedPersons.this, "You're already in the Matches Page", Toast.LENGTH_SHORT).show();
+        }
+        else if(item.getItemId() == R.id.main_all_users){
+            Intent startIntent = new Intent(MatchedPersons.this, AllUsers.class);
+            startActivity(startIntent);
+        }
+        //return super.onOptionsItemSelected(item);
+        return false;
+    }
+
+    private void sendToStart() {
+        Intent startIntent = new Intent(MatchedPersons.this, StartActivity.class);
+        startActivity(startIntent);
+        finish();
+    }
+
 }
 
 
