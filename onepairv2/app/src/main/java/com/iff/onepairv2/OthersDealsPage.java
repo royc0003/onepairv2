@@ -133,11 +133,9 @@ public class OthersDealsPage extends AppCompatActivity {
             Intent startIntent = new Intent(OthersDealsPage.this, MainActivity.class);
             startActivity(startIntent);
         }
-        else if(item.getItemId() == R.id.main_my_deals){
-            //not yet
-        }
         else if(item.getItemId() == R.id.main_chat){
-            //not yet
+            Intent startIntent = new Intent(OthersDealsPage.this, MatchedPersons.class);
+            startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(OthersDealsPage.this, AllUsers.class);

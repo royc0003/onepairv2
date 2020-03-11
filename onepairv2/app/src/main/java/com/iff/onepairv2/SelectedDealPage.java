@@ -5,11 +5,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -37,6 +42,7 @@ public class SelectedDealPage extends AppCompatActivity {
     private TextView termsCondition;
     private TextView startEnd;
     private ArrayList<Location> locations;
+    private FirebaseAuth mAuth;
 
     public static ProgressDialog mQueueProgress;
 
@@ -52,6 +58,7 @@ public class SelectedDealPage extends AppCompatActivity {
         dealsImage = findViewById(R.id.dealsImage);
         termsCondition = findViewById(R.id.termsConditions);
         startEnd = findViewById(R.id.startend);
+        mAuth = FirebaseAuth.getInstance();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://128.199.167.80:8080/")
@@ -203,6 +210,16 @@ public class SelectedDealPage extends AppCompatActivity {
                             }
                             //if dismissed when match is found, change variable back to 0
                             if(MyFirebaseMessagingService.matched == 1){
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SelectedDealPage.this);
+                                String username = prefs.getString("username_matched","");
+                                String image = prefs.getString("image_matched","");
+                                String thumb_image = prefs.getString("thumb_image_matched","");
+                                String dealName = prefs.getString("dealName_matched","");
+                                String location= prefs.getString("location_matched","");
+                                String uid = prefs.getString("uid matched", "");
+                                showPopUp(username, image, thumb_image, dealName, location, uid);
+
+
                                 MyFirebaseMessagingService.matched = 0;
                             }
                         }
@@ -215,6 +232,7 @@ public class SelectedDealPage extends AppCompatActivity {
                             mQueueProgress.dismiss();//dismiss dialog
                         }
                     });
+                    mQueueProgress.show();
 
                     //add Request to server on click
                     Retrofit retrofit = new Retrofit.Builder()
@@ -228,18 +246,17 @@ public class SelectedDealPage extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(!response.isSuccessful()){
+                                mQueueProgress.dismiss();
                                 Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
                                 toast.show();
                                 return;
                             }
-                            //Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
-                            //toast.show();
-                            //Show Dialog when request is added, so server finds for a match
-                            mQueueProgress.show();
-                            // Add matching algo here
+                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+
                         }
                         @Override
                         public void onFailure(Call<Void> call, Throwable t) {
+                            mQueueProgress.dismiss();
                             Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
                             toast.show();
                         }
@@ -254,6 +271,58 @@ public class SelectedDealPage extends AppCompatActivity {
         alertDialog = myBuilder.create();
         //show dialog
         alertDialog.show();
+    }
+
+    public void showPopUp(final String name, final String image, String thumb_image, String dealName, String location, final String uid) {
+        System.out.println("INSIDE SHOW POP UP");
+        TextView matchName, matchDeal, matchLocation;
+        ImageView matchProfileImage;
+        Button chatBtn;
+
+        myDialog = new Dialog(SelectedDealPage.this);
+        myDialog.setCanceledOnTouchOutside(false);
+        myDialog.setContentView(R.layout.matchpopup);
+
+        matchName = (TextView) myDialog.findViewById(R.id.matchname);
+        //noMatches = (TextView) myDialog.findViewById(R.id.numberofmatches);
+        //noMatches.setText(numberOfMatches);
+        matchProfileImage = (ImageView) myDialog.findViewById(R.id.popupimage);
+        matchDeal = (TextView) myDialog.findViewById(R.id.deal_name);
+        matchLocation = (TextView) myDialog.findViewById(R.id.location);
+        chatBtn = (Button) myDialog.findViewById(R.id.chatBtn);
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //start newActivity with title for actionbar and text for textview
+                Intent intent = new Intent(SelectedDealPage.this, ChatActivity.class);
+               // add in matched user id
+                intent.putExtra("user_name", name);
+                System.out.println("MATCHED USER ISS: " + name);
+                intent.putExtra("user_image", image);
+                intent.putExtra("user_id", uid);
+                System.out.println("MATCHED USER UID: " + uid);
+
+                //set chat to true
+                DatabaseReference mChatDB = FirebaseDatabase.getInstance().getReference().child("Chat").child(mAuth.getCurrentUser().getUid()).child(uid).child("chat");
+                mChatDB.setValue(true);
+                DatabaseReference mChatDB2 = FirebaseDatabase.getInstance().getReference().child("Chat").child(uid).child(mAuth.getCurrentUser().getUid()).child("chat");
+                mChatDB2.setValue(true);
+
+                if((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                SelectedDealPage.this.startActivity(intent);
+                finish();
+            }
+        });
+
+        matchName.setText(name);
+        Picasso.get().load(image).into(matchProfileImage);
+        matchDeal.setText(dealName);
+        matchLocation.setText(location);
+
+        myDialog.show();
     }
 
 

@@ -132,11 +132,9 @@ public class FoodDealsPage extends AppCompatActivity {
             Intent startIntent = new Intent(FoodDealsPage.this, MainActivity.class);
             startActivity(startIntent);
         }
-        else if(item.getItemId() == R.id.main_my_deals){
-            //not yet
-        }
         else if(item.getItemId() == R.id.main_chat){
-            //not yet
+            Intent startIntent = new Intent(FoodDealsPage.this, MatchedPersons.class);
+            startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(FoodDealsPage.this, AllUsers.class);

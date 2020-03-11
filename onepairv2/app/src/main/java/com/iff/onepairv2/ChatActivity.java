@@ -7,9 +7,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,7 +75,7 @@ public class ChatActivity extends AppCompatActivity {
         //Set Title in Toolbar
         mToolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(mChatUser_target_name);
+        getSupportActionBar().setTitle("          " + mChatUser_target_name);
 
         //Current User Details
         mAuth = FirebaseAuth.getInstance();
@@ -126,6 +129,36 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.chat_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(item.getItemId() == R.id.unmatch){
+            mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
+            mRootRef.child("Chat").child(mChatUser_target_uid).child(mChatUser_own_uid).child("chat").setValue(false);
+            Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
+            startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(startIntent);
+            finish();
+        }
+        else if(item.getItemId() == R.id.close_chat){
+            mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
+            Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
+            startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(startIntent);
+            finish();
+        }
+        //return super.onOptionsItemSelected(item);
+        return false;
     }
 
     private void loadMesseges() {
