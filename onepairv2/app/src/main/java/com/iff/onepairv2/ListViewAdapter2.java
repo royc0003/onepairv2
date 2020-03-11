@@ -62,7 +62,7 @@ public class ListViewAdapter2 extends BaseAdapter {
 
             //locate the views in row.xml
             holder.mTitleTv = view.findViewById(R.id.mainTitle);
-            holder.mDescTv = view.findViewById(R.id.mainDesc);
+            //holder.mDescTv = view.findViewById(R.id.mainDesc);
             holder.mIconIv = view.findViewById(R.id.mainIcon);
 
             view.setTag(holder);
@@ -71,7 +71,7 @@ public class ListViewAdapter2 extends BaseAdapter {
         }
         //set the result into textviews
         holder.mTitleTv.setText(modellist.get(position).getTitle());
-        holder.mDescTv.setText(modellist.get(position).getDesc());
+        //holder.mDescTv.setText(modellist.get(position).getDesc());
         //set the result in imageview
         Picasso.get().load(Uri.parse(modellist.get(position).getIcon())).into(holder.mIconIv);
 

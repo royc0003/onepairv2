@@ -228,6 +228,7 @@ public class SelectedDealPage extends AppCompatActivity {
                             mQueueProgress.dismiss();//dismiss dialog
                         }
                     });
+                    mQueueProgress.show();
 
                     //add Request to server on click
                     Retrofit retrofit = new Retrofit.Builder()
@@ -241,18 +242,17 @@ public class SelectedDealPage extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(!response.isSuccessful()){
+                                mQueueProgress.dismiss();
                                 Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
                                 toast.show();
                                 return;
                             }
-                            //Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
-                            //toast.show();
-                            //Show Dialog when request is added, so server finds for a match
-                            mQueueProgress.show();
-                            // Add matching algo here
+                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+
                         }
                         @Override
                         public void onFailure(Call<Void> call, Throwable t) {
+                            mQueueProgress.dismiss();
                             Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
                             toast.show();
                         }
@@ -302,6 +302,7 @@ public class SelectedDealPage extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
                 SelectedDealPage.this.startActivity(intent);
+                finish();
             }
         });
 
