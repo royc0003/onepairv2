@@ -59,7 +59,10 @@ public class MatchedPersons extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
-                    matchUIDs.add(chatSnapshot.getKey());
+                    Boolean check = (Boolean) chatSnapshot.child("chat").getValue();
+                    if(check){
+                        matchUIDs.add(chatSnapshot.getKey());
+                    }
                 }
 
                 //retrieve all data from database

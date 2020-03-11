@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class SelectedDealPage extends AppCompatActivity {
     private TextView termsCondition;
     private TextView startEnd;
     private ArrayList<Location> locations;
+    private FirebaseAuth mAuth;
 
     public static ProgressDialog mQueueProgress;
 
@@ -55,6 +58,7 @@ public class SelectedDealPage extends AppCompatActivity {
         dealsImage = findViewById(R.id.dealsImage);
         termsCondition = findViewById(R.id.termsConditions);
         startEnd = findViewById(R.id.startend);
+        mAuth = FirebaseAuth.getInstance();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://128.199.167.80:8080/")
@@ -289,6 +293,7 @@ public class SelectedDealPage extends AppCompatActivity {
         chatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //start newActivity with title for actionbar and text for textview
                 Intent intent = new Intent(SelectedDealPage.this, ChatActivity.class);
                // add in matched user id
@@ -297,6 +302,12 @@ public class SelectedDealPage extends AppCompatActivity {
                 intent.putExtra("user_image", image);
                 intent.putExtra("user_id", uid);
                 System.out.println("MATCHED USER UID: " + uid);
+
+                //set chat to true
+                DatabaseReference mChatDB = FirebaseDatabase.getInstance().getReference().child("Chat").child(mAuth.getCurrentUser().getUid()).child(uid).child("chat");
+                mChatDB.setValue(true);
+                DatabaseReference mChatDB2 = FirebaseDatabase.getInstance().getReference().child("Chat").child(uid).child(mAuth.getCurrentUser().getUid()).child("chat");
+                mChatDB2.setValue(true);
 
                 if((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)){
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

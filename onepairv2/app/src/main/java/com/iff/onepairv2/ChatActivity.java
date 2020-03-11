@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -142,11 +143,19 @@ public class ChatActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(item.getItemId() == R.id.unmatch){
-            //mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
-            //mRootRef.child("Chat").child(mChatUser_target_uid).child(mChatUser_own_uid).child("chat").setValue(false);
+            mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
+            mRootRef.child("Chat").child(mChatUser_target_uid).child(mChatUser_own_uid).child("chat").setValue(false);
+            Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
+            startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(startIntent);
+            finish();
         }
         else if(item.getItemId() == R.id.close_chat){
-            //here
+            mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
+            Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
+            startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(startIntent);
+            finish();
         }
         //return super.onOptionsItemSelected(item);
         return false;

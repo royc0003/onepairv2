@@ -86,6 +86,10 @@ public class AllUsers extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0){
+                                    DatabaseReference mChatDB = FirebaseDatabase.getInstance().getReference().child("Chat").child(mAuth.getCurrentUser().getUid()).child(model.getUid()).child("chat");
+                                    mChatDB.setValue(true);
+                                    DatabaseReference mChatDB2 = FirebaseDatabase.getInstance().getReference().child("Chat").child(model.getUid()).child(mAuth.getCurrentUser().getUid()).child("chat");
+                                    mChatDB2.setValue(true);
                                     Intent chatIntent = new Intent(AllUsers.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", model.getUid());
                                     chatIntent.putExtra("user_name", model.getName());
