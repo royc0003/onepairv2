@@ -9,11 +9,8 @@
         android:id="@+id/main_homepage"
         android:title="Homepage" />
     <item
-        android:id="@+id/main_my_deals"
-        android:title="My Deals" />
-    <item
         android:id="@+id/main_chat"
-        android:title="Chat" />
+        android:title="Matches" />
     <item
         android:id="@+id/main_all_users"
         android:title="All Users" />

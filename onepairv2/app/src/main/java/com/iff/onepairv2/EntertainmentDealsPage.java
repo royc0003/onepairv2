@@ -134,9 +134,7 @@ public class EntertainmentDealsPage extends AppCompatActivity {
             Intent startIntent = new Intent(EntertainmentDealsPage.this, MainActivity.class);
             startActivity(startIntent);
         }
-        else if(item.getItemId() == R.id.main_my_deals){
-            //not yet
-        }
+
         else if(item.getItemId() == R.id.main_chat){
             //not yet
             Intent startIntent = new Intent(EntertainmentDealsPage.this, MatchedPersons.class);
