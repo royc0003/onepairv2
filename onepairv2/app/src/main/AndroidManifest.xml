@@ -17,6 +17,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity android:name=".ChatActivity" android:screenOrientation="locked"></activity>
+        <activity android:name=".MatchedPersons"/>
         <activity android:name=".AllUsers" android:screenOrientation="locked" />
         <activity android:name=".SelectedDealPage" android:screenOrientation="locked" />
         <activity android:name=".OthersDealsPage" android:screenOrientation="locked" />

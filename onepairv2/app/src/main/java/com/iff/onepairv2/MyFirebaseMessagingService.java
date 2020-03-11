@@ -79,6 +79,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         String username = dataSnapshot.child("name").getValue().toString();
                         String image = dataSnapshot.child("image").getValue().toString();
                         String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+                        String uid = dataSnapshot.child("uid").getValue().toString();
                         message += "Found a match with ";
                         message += username;
                         message += " on ";
@@ -99,6 +100,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         editor.putString("thumb_image_matched", thumb_image);
                         editor.putString("dealName_matched", dealName);
                         editor.putString("location_matched", location);
+                        editor.putString("uid matched", uid);
 
                         // Replace with popup soon
                         matched = 1; // match is found, hence matched = 1

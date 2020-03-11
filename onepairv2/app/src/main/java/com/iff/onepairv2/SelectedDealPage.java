@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -211,7 +212,8 @@ public class SelectedDealPage extends AppCompatActivity {
                                 String thumb_image = prefs.getString("thumb_image_matched","");
                                 String dealName = prefs.getString("dealName_matched","");
                                 String location= prefs.getString("location_matched","");
-                                showPopUp(username, image, thumb_image, dealName, location);
+                                String uid = prefs.getString("uid matched", "");
+                                showPopUp(username, image, thumb_image, dealName, location, uid);
 
 
                                 MyFirebaseMessagingService.matched = 0;
@@ -267,7 +269,7 @@ public class SelectedDealPage extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void showPopUp(String name, String image, String thumb_image, String dealName, String location) {
+    public void showPopUp(final String name, final String image, String thumb_image, String dealName, String location, final String uid) {
         System.out.println("INSIDE SHOW POP UP");
         TextView matchName, matchDeal, matchLocation;
         ImageView matchProfileImage;
@@ -284,6 +286,24 @@ public class SelectedDealPage extends AppCompatActivity {
         matchDeal = (TextView) myDialog.findViewById(R.id.deal_name);
         matchLocation = (TextView) myDialog.findViewById(R.id.location);
         chatBtn = (Button) myDialog.findViewById(R.id.chatBtn);
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //start newActivity with title for actionbar and text for textview
+                Intent intent = new Intent(SelectedDealPage.this, ChatActivity.class);
+               // add in matched user id
+                intent.putExtra("user_name", name);
+                System.out.println("MATCHED USER ISS: " + name);
+                intent.putExtra("user_image", image);
+                intent.putExtra("user_id", uid);
+                System.out.println("MATCHED USER UID: " + uid);
+
+                if((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                SelectedDealPage.this.startActivity(intent);
+            }
+        });
 
         matchName.setText(name);
         Picasso.get().load(image).into(matchProfileImage);

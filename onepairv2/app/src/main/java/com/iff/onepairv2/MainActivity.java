@@ -177,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else if(item.getItemId() == R.id.main_chat){
             //not yet
+            Intent startIntent = new Intent(MainActivity.this, MatchedPersons.class);
+            startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(MainActivity.this, AllUsers.class);
