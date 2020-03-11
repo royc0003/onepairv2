@@ -5,11 +5,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -203,6 +205,15 @@ public class SelectedDealPage extends AppCompatActivity {
                             }
                             //if dismissed when match is found, change variable back to 0
                             if(MyFirebaseMessagingService.matched == 1){
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SelectedDealPage.this);
+                                String username = prefs.getString("username_matched","");
+                                String image = prefs.getString("image_matched","");
+                                String thumb_image = prefs.getString("thumb_image_matched","");
+                                String dealName = prefs.getString("dealName_matched","");
+                                String location= prefs.getString("location_matched","");
+                                showPopUp(username, image, thumb_image, dealName, location);
+
+
                                 MyFirebaseMessagingService.matched = 0;
                             }
                         }
@@ -254,6 +265,32 @@ public class SelectedDealPage extends AppCompatActivity {
         alertDialog = myBuilder.create();
         //show dialog
         alertDialog.show();
+    }
+
+    public void showPopUp(String name, String image, String thumb_image, String dealName, String location) {
+        System.out.println("INSIDE SHOW POP UP");
+        TextView matchName, matchDeal, matchLocation;
+        ImageView matchProfileImage;
+        Button chatBtn;
+
+        myDialog = new Dialog(SelectedDealPage.this);
+        myDialog.setCanceledOnTouchOutside(false);
+        myDialog.setContentView(R.layout.matchpopup);
+
+        matchName = (TextView) myDialog.findViewById(R.id.matchname);
+        //noMatches = (TextView) myDialog.findViewById(R.id.numberofmatches);
+        //noMatches.setText(numberOfMatches);
+        matchProfileImage = (ImageView) myDialog.findViewById(R.id.popupimage);
+        matchDeal = (TextView) myDialog.findViewById(R.id.deal_name);
+        matchLocation = (TextView) myDialog.findViewById(R.id.location);
+        chatBtn = (Button) myDialog.findViewById(R.id.chatBtn);
+
+        matchName.setText(name);
+        Picasso.get().load(image).into(matchProfileImage);
+        matchDeal.setText(dealName);
+        matchLocation.setText(location);
+
+        myDialog.show();
     }
 
 

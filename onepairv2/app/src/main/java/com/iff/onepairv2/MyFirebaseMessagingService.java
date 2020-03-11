@@ -1,5 +1,8 @@
 package com.iff.onepairv2;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -82,13 +85,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         message += dealName;
                         message += " at ";
                         message += location;
-                        
+                        //including Intent
+                        /*Intent intent = SelectedDealPage.;
+                        intent.putExtra("username_matched", username);
+                        intent.putExtra("image_matched", image);
+                        intent.putExtra("thumb_image_matched", thumb_image);
+                        intent.putExtra("dealName_matched", dealName);
+                        intent.putExtra("location_matched", location);*/
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MyFirebaseMessagingService.this);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("username_matched", username);
+                        editor.putString("image_matched", image);
+                        editor.putString("thumb_image_matched", thumb_image);
+                        editor.putString("dealName_matched", dealName);
+                        editor.putString("location_matched", location);
 
                         // Replace with popup soon
                         matched = 1; // match is found, hence matched = 1
                         SelectedDealPage.mQueueProgress.dismiss(); //dimiss dialog when match is found
-                        Toast toast = Toast.makeText(MyFirebaseMessagingService.this, message, Toast.LENGTH_LONG); 
-                        toast.show();
+                        /*Toast toast = Toast.makeText(MyFirebaseMessagingService.this, message, Toast.LENGTH_LONG);
+                        toast.show();*/
+                        editor.commit();
+
                     }
 
                     @Override
