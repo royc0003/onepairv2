@@ -2,6 +2,7 @@ package com.iff.onepairv2;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,8 @@ public class SelectedDealPage extends AppCompatActivity {
     private TextView termsCondition;
     private TextView startEnd;
     private ArrayList<Location> locations;
+
+    public static ProgressDialog mQueueProgress;
 
     private Deal deal;
 
@@ -158,22 +162,80 @@ public class SelectedDealPage extends AppCompatActivity {
                             c += x;
                         }
                     }
+
+                    //Add Dialog to halt user
+                    mQueueProgress = new ProgressDialog(SelectedDealPage.this);
+                    mQueueProgress.setTitle("Finding you a match!");
+                    mQueueProgress.setMessage("This may take a while");
+                    mQueueProgress.setCanceledOnTouchOutside(false);
+
+                    //Dismiss listener
+                    mQueueProgress.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            //if dismissed when match is not found, remove request from server
+                            if(MyFirebaseMessagingService.matched == 0){
+                                //JOZUA ADD YOUR CODE HERE TO REMOVE THIS PERSON'S REQUEST
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl("http://128.199.167.80:8080/")
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+                                BackEndController backEndController = retrofit.create(BackEndController.class);
+                                Call<Void> call = backEndController.deleteRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId());
+                                call.enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if(!response.isSuccessful()){
+                                            Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                            return;
+                                        }
+                                        //if successfully remove request
+                                        Toast toast = Toast.makeText(SelectedDealPage.this, "Your request has been removed from wait list.", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                });
+                            }
+                            //if dismissed when match is found, change variable back to 0
+                            if(MyFirebaseMessagingService.matched == 1){
+                                MyFirebaseMessagingService.matched = 0;
+                            }
+                        }
+                    });
+
+                    //Button in dialog to cancel matching
+                    mQueueProgress.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mQueueProgress.dismiss();//dismiss dialog
+                        }
+                    });
+
+                    //add Request to server on click
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl("http://128.199.167.80:8080/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);
                     Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
+                    System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     call.enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if(!response.isSuccessful()){
-                                Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                                Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
                                 toast.show();
                                 return;
                             }
-                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
-                            toast.show();
+                            //Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                            //toast.show();
+                            //Show Dialog when request is added, so server finds for a match
+                            mQueueProgress.show();
                             // Add matching algo here
                         }
                         @Override
@@ -193,25 +255,6 @@ public class SelectedDealPage extends AppCompatActivity {
         //show dialog
         alertDialog.show();
     }
-
-    //Once a match is made by system, this pop up box will appear
-    public void ShowPopUp() {
-        System.out.println("INSIDE SHOW POP UP");
-        TextView txtclose;
-        Button chatBtn;
-        myDialog.setContentView(R.layout.matchpopup);
-        txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
-        chatBtn = (Button) myDialog.findViewById(R.id.chatBtn);
-        System.out.println("Chat Button clicked");
-        txtclose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-            }
-        });
-        myDialog.show();
-    }
-
 
 
 

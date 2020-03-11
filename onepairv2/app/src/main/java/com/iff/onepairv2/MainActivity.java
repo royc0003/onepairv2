@@ -81,48 +81,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);
                         Log.d("token ID", token);
-                        //Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void saveToken(String token) {
-        String email = mAuth.getCurrentUser().getEmail();
-        final User user = new User(email, token);
+        String email;
+        String uid;
+        if(mAuth.getCurrentUser() != null){
+            email = mAuth.getCurrentUser().getEmail();
+            uid = mAuth.getCurrentUser().getUid();
 
-        // Update django db too
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://128.199.167.80:8080/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        BackEndController backEndController = retrofit.create(BackEndController.class);
-        Call<Void> call = backEndController.updateToken(mAuth.getCurrentUser().getUid(), token);
-        //System.out.print(token);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if(!response.isSuccessful()){
-                    System.out.println("Oops something went wrong!");
-                    return;
-                }
-                DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("UserToken");
-                dbUsers.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>()
-                {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, "Token saved", Toast.LENGTH_LONG).show();
-                        }
+            final User user = new User(email, token);
+
+            // Update django db too
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://128.199.167.80:8080/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            BackEndController backEndController = retrofit.create(BackEndController.class);
+            Call<Void> call = backEndController.updateToken(uid, token);
+            //System.out.print(token);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(!response.isSuccessful()){
+                        System.out.println("Oops something went wrong!");
+                        return;
                     }
-                });
-            }
+                    DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("UserToken");
+                    dbUsers.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(MainActivity.this, "Token saved", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("Oops something went wrong!");
-            }
-        });
-
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    System.out.println("Oops something went wrong!");
+                }
+            });
+        }
     }
 
 
