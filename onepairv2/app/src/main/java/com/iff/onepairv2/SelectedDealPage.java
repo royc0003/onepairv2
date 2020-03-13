@@ -113,7 +113,7 @@ public class SelectedDealPage extends AppCompatActivity {
         //instantiate alertdialog builder
         AlertDialog.Builder myBuilder = new AlertDialog.Builder(this);
         //data source
-        final ArrayList selectedLocations = new ArrayList();
+        final ArrayList<String> selectedLocations = new ArrayList();
         final String locationNames[] = new String[locations.size()];
         final ArrayList<Integer> selectedKey = new ArrayList<Integer>();
         for(int i = 0; i < locations.size(); i++){
@@ -129,6 +129,14 @@ public class SelectedDealPage extends AppCompatActivity {
                     //if the user checked the item, add it to the selected items
                     selectedLocations.add(locationNames[position]);
                     selectedKey.add(locations.get(position).getId());
+                }
+                else if (!isChecked) {
+                    for(int k=0; k<selectedLocations.size(); k++){
+                        if(selectedLocations.get(k).compareTo(locationNames[position]) == 0){
+                            selectedLocations.remove(k);
+                            selectedKey.remove(k);
+                        }
+                    }
                 }
                 else if (selectedLocations.contains(position)) {
                     //else if the item is already in the array list, remove it

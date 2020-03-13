@@ -8,7 +8,6 @@ import androidx.cardview.widget.CardView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             email = mAuth.getCurrentUser().getEmail();
             uid = mAuth.getCurrentUser().getUid();
 
-            final User user = new User(email, token);
+            final UserToken userToken = new UserToken(email, token);
 
             // Update django db too
             Retrofit retrofit = new Retrofit.Builder()
@@ -111,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return;
                     }
                     DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("UserToken");
-                    dbUsers.child(mAuth.getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>()
+                    dbUsers.child(mAuth.getCurrentUser().getUid()).setValue(userToken).addOnCompleteListener(new OnCompleteListener<Void>()
                     {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
