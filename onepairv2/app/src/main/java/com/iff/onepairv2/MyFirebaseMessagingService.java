@@ -1,5 +1,6 @@
 package com.iff.onepairv2;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
@@ -26,6 +29,10 @@ import org.json.JSONObject;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     static int matched = 0;
+    private String subscribeTopic;
+    private FirebaseAuth mAuth;
+    private String ownUID;
+
 
 
     /**
@@ -102,13 +109,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         editor.putString("location_matched", location);
                         editor.putString("uid matched", uid);
 
+                        //subscribe both users to same topic
+                        mAuth = FirebaseAuth.getInstance();
+                        ownUID = mAuth.getCurrentUser().getUid();
+                        subscribeTopic = uid + ownUID;
+                        FirebaseMessaging.getInstance().subscribeToTopic(subscribeTopic);
+
                         // Replace with popup soon
                         matched = 1; // match is found, hence matched = 1
                         SelectedDealPage.mQueueProgress.dismiss(); //dimiss dialog when match is found
                         /*Toast toast = Toast.makeText(MyFirebaseMessagingService.this, message, Toast.LENGTH_LONG);
                         toast.show();*/
                         editor.commit();
-
                     }
 
                     @Override
@@ -127,9 +139,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else {
                 // Handle message within 10 seconds
                 //s handleNow();
-
             }
-
         }
 
         // Check if message contains a notification payload.
@@ -143,6 +153,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
-
 
 }

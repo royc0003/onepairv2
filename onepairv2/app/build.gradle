@@ -54,4 +54,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:6.2.0'
     implementation 'id.zelory:compressor:3.0.0'
 
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
 }

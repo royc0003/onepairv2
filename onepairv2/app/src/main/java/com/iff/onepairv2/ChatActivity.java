@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -19,6 +21,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,10 +70,16 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayout;
     private MessageAdapter mAdapter;
 
+    private RequestQueue mRequestQue;
+    private String URL = "https://fcm.googleapis.com/fcm/send";
+    private String topic;
+    private DatabaseReference mUserDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        mRequestQue = Volley.newRequestQueue(this);
 
         //Chat Target Details
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -80,6 +99,21 @@ public class ChatActivity extends AppCompatActivity {
         //Current User Details
         mAuth = FirebaseAuth.getInstance();
         mChatUser_own_uid = mAuth.getCurrentUser().getUid();
+       /* mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUser_own_uid);
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mChatUser_own_name = dataSnapshot.child("name").getValue().toString();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
 
         //xml elements
         mMsg_field = (EditText) findViewById(R.id.msg_field);
@@ -100,7 +134,7 @@ public class ChatActivity extends AppCompatActivity {
         mRootRef.child("Chat").child(mChatUser_own_uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.hasChild(mChatUser_target_uid)){
+                if (!dataSnapshot.hasChild(mChatUser_target_uid)) {
 
                     Map chatAddMap = new HashMap();
                     chatAddMap.put("chat", true);
@@ -128,7 +162,6 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     @Override
@@ -142,15 +175,14 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(item.getItemId() == R.id.unmatch){
+        if (item.getItemId() == R.id.unmatch) {
             mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
             mRootRef.child("Chat").child(mChatUser_target_uid).child(mChatUser_own_uid).child("chat").setValue(false);
             Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
             startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(startIntent);
             finish();
-        }
-        else if(item.getItemId() == R.id.close_chat){
+        } else if (item.getItemId() == R.id.close_chat) {
             mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
             Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
             startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -197,7 +229,7 @@ public class ChatActivity extends AppCompatActivity {
 
         String message = mMsg_field.getText().toString();
 
-        if(!TextUtils.isEmpty(message)){
+        if (!TextUtils.isEmpty(message)) {
 
             String current_user_ref = "Messages/" + mChatUser_own_uid + "/" + mChatUser_target_uid;
             String target_user_ref = "Messages/" + mChatUser_target_uid + "/" + mChatUser_own_uid;
@@ -218,7 +250,61 @@ public class ChatActivity extends AppCompatActivity {
 
             mRootRef.updateChildren(messageUserMap);
 
+            sendNotification(message);
+
         }
+    }
+
+    private void sendNotification(String message){
+
+        //for sending of background notifications
+        //our json object will look like this
+        JSONObject mainObj = new JSONObject();
+        topic = mChatUser_own_uid + mChatUser_target_uid;
+        System.out.println("NAME NAME" + mChatUser_own_name);
+        try {
+            mainObj.put("to", "/topics/" + topic);
+            JSONObject notificationObj = new JSONObject();
+            notificationObj.put("title", "New Message");
+            notificationObj.put("body", message);
+            mainObj.put("notification", notificationObj);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, mainObj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    //codes here will run when notification is sent
+                    System.out.println("MESSAGE SENT");
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //codes here will run on error
+                    System.out.println("MESSAGE FAILED");
+                }
+            }
+            ) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> header = new HashMap<>();
+                    header.put("content-type", "application/json");
+                    header.put("authorization", "key=AIzaSyAOPEEMta24s-K-XyunD5xpBGsNQ6FGcwc");
+                    return header;
+                }
+            };
+            mRequestQue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        /*Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("user_id", mChatUser_own_uid);
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_ONE_SHOT);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "123");
+
+        builder.setContentIntent(pendingIntent);*/
 
     }
 }
