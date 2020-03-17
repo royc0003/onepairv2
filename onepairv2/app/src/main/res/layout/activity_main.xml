@@ -7,7 +7,9 @@
     tools:context=".MainActivity">
 
 
-    <include layout="@layout/app_bar_layout" android:id="@+id/main_page_toolbar"/>
+    <include
+        android:id="@+id/main_page_toolbar"
+        layout="@layout/app_bar_layout" />
 
     //For food and entertainment
 
@@ -17,18 +19,17 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:clipToPadding="false"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_page_toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
 
         <androidx.cardview.widget.CardView
             android:id="@+id/food"
             android:layout_width="160dp"
-            android:layout_height="190dp"
+            android:layout_height="165dp"
             android:layout_margin="10dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground">
@@ -75,7 +76,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/entertainment"
             android:layout_width="160dp"
-            android:layout_height="190dp"
+            android:layout_height="165dp"
             android:layout_margin="10dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground">
@@ -125,9 +126,11 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:clipToPadding="false"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
@@ -135,7 +138,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/retail"
             android:layout_width="160dp"
-            android:layout_height="190dp"
+            android:layout_height="165dp"
             android:layout_margin="10dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground">
@@ -182,7 +185,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/others"
             android:layout_width="160dp"
-            android:layout_height="190dp"
+            android:layout_height="165dp"
             android:layout_margin="10dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground">
@@ -229,19 +232,21 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="245dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-        <ViewFlipper
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/v_flipper"/>
 
+        app:layout_constraintTop_toBottomOf="@+id/main_page_toolbar">
+
+        <ViewFlipper
+            android:id="@+id/v_flipper"
+            android:layout_width="match_parent"
+          android:layout_height="match_parent" />
     </LinearLayout>
 
 
