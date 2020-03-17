@@ -29,7 +29,7 @@ public class MatchedPersons extends AppCompatActivity {
 
     private Toolbar mToolbar;
     ListView listView;
-    ListViewAdapter2 adapter;
+    MatchesListViewAdapter adapter;
 
     ArrayList<String> matchUIDs = new ArrayList<String>();
     ArrayList<Users> allUsers = new ArrayList<Users>();
@@ -104,7 +104,7 @@ public class MatchedPersons extends AppCompatActivity {
                         }
 
                         //pass results to listViewAdapter class
-                        adapter = new ListViewAdapter2(MatchedPersons.this, arrayList);
+                        adapter = new MatchesListViewAdapter(MatchedPersons.this, arrayList);
 
                         //bind the adapter to the listview
                         listView.setAdapter(adapter);

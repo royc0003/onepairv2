@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -76,14 +75,14 @@ public class RegisterActivity extends AppCompatActivity {
                    mRegProgress.setMessage("This may take a while");
                    mRegProgress.setCanceledOnTouchOutside(false);
                    mRegProgress.show();
-                   register_user(display_name, email, password);
+                   registerUser(display_name, email, password);
                 }
 
             }
         });
     }
 
-    private void register_user(final String display_name, String email, String password){
+    private void registerUser(final String display_name, String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

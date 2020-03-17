@@ -1,7 +1,6 @@
 package com.iff.onepairv2;
 //hellyeah
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -31,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class EntertainmentDealsPage extends AppCompatActivity {
 
     ListView listView;
-    ListViewAdapter adapter;
+    DealsListViewAdapter adapter;
     String[] title;
     String[] description;
     int[] icon;
@@ -86,7 +85,7 @@ public class EntertainmentDealsPage extends AppCompatActivity {
                     editor.putString("entertainmentCheck", "0");
                     editor.commit();
                 }
-                adapter = new ListViewAdapter(getApplicationContext(), arrayList);
+                adapter = new DealsListViewAdapter(getApplicationContext(), arrayList);
                 listView.setAdapter(adapter);
 
                 //if array list is empty
