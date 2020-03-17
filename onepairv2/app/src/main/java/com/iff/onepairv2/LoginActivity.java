@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import android.text.method.PasswordTransformationMethod;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,6 +32,9 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog mLoginProgress;
 
     private FirebaseAuth mAuth;
+
+    private ImageButton mVisibilityBtn;
+    private boolean showPassword = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         mLogEmail = (TextInputLayout) findViewById(R.id.log_email);
         mLogPassword = (TextInputLayout) findViewById(R.id.log_password);
         mLogBtn = (Button) findViewById(R.id.login_login_btn);
+        mVisibilityBtn = findViewById(R.id.log_visibility_button);
 
         mLogBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +66,21 @@ public class LoginActivity extends AppCompatActivity {
                     mLoginProgress.setCanceledOnTouchOutside(false);
                     mLoginProgress.show();
                     loginUser(email, password);
+                }
+            }
+        });
+
+        mVisibilityBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               if(!showPassword){
+                   mVisibilityBtn.setImageResource(R.drawable.notvisibleicon);
+                   mLogPassword.getEditText().setTransformationMethod(null);
+                   showPassword = true;
+               } else {
+                   mVisibilityBtn.setImageResource(R.drawable.visibleicon);
+                   mLogPassword.getEditText().setTransformationMethod(new PasswordTransformationMethod());
+                   showPassword = false;
                 }
             }
         });

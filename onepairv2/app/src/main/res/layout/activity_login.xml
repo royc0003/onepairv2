@@ -40,7 +40,24 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textEmailAddress" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/log_visibility_button"
+        android:layout_width="30dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="263dp"
+        android:layout_marginLeft="263dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="10dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/log_password"
+        app:layout_constraintEnd_toEndOf="@+id/log_password"
+        app:layout_constraintStart_toStartOf="@+id/log_password"
+        app:layout_constraintTop_toTopOf="@+id/log_password"
+        app:srcCompat="@drawable/visibleicon" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/log_password"
@@ -51,6 +68,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
+        android:paddingRight="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_email">
@@ -62,7 +80,15 @@
             android:ems="10"
             android:hint="Password"
             android:inputType="textPassword" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width = "match_parent"
+        android:gravity = "center"
+        android:layout_height = "wrap_content">
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/login_login_btn"
@@ -76,5 +102,6 @@
         app:layout_constraintHorizontal_bias="0.848"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/log_password" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

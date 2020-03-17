@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import android.text.method.PasswordTransformationMethod;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private TextInputLayout mDisplayName;
@@ -42,6 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
+    private ImageButton mVisibilityBtn;
+    private boolean showPassword = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
         mEmail = (TextInputLayout) findViewById(R.id.reg_email);
         mPassword = (TextInputLayout) findViewById(R.id.reg_password);
         mRegBtn = (Button) findViewById(R.id.reg_login_btn);
+        mVisibilityBtn = findViewById(R.id.reg_visibility_button);
 
         mRegBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +84,21 @@ public class RegisterActivity extends AppCompatActivity {
                    registerUser(display_name, email, password);
                 }
 
+            }
+        });
+
+        mVisibilityBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!showPassword){
+                    mVisibilityBtn.setImageResource(R.drawable.notvisibleicon);
+                    mPassword.getEditText().setTransformationMethod(null);
+                    showPassword = true;
+                } else {
+                    mVisibilityBtn.setImageResource(R.drawable.visibleicon);
+                    mPassword.getEditText().setTransformationMethod(new PasswordTransformationMethod());
+                    showPassword = false;
+                }
             }
         });
     }
