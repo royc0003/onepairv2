@@ -29,7 +29,7 @@
             android:parentActivityName=".ProfileActivity"
             android:screenOrientation="locked"/>
         <activity android:name=".ProfileActivity" android:screenOrientation="locked"/>
-        <activity android:name=".Login" android:screenOrientation="locked"/>
+        <activity android:name=".LoginActivity" android:screenOrientation="locked"/>
         <activity android:name=".RegisterActivity" android:screenOrientation="locked"/>
         <activity android:name=".StartActivity" android:screenOrientation="locked"/>
         <activity android:name=".MainActivity" android:screenOrientation="locked">

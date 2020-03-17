@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,7 +18,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
@@ -73,14 +72,14 @@ public class Login extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     mLoginProgress.dismiss();
-                    Intent mainIntent = new Intent(Login.this, MainActivity.class);
+                    Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(mainIntent);
                     finish();
                 }
                 else{
                     mLoginProgress.hide();
-                    Toast.makeText(Login.this, "Invalid Email/Password", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Invalid Email/Password", Toast.LENGTH_LONG).show();
                 }
             }
         });

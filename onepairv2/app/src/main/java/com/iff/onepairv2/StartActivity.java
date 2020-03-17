@@ -41,7 +41,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent log_int = new Intent(StartActivity.this, Login.class);
+                Intent log_int = new Intent(StartActivity.this, LoginActivity.class);
                 startActivity(log_int);
 
             }
