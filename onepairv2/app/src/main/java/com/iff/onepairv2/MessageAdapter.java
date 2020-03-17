@@ -48,6 +48,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
                 holder.messageText.setLayoutParams(params); // request the view to use the new modified params
             }
             else{
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) holder.messageText.getLayoutParams();
+                params.horizontalBias = 0.02f; // here is one modification for example. modify anything else you want :)
+                holder.messageText.setLayoutParams(params); // request the view to use the new modified params
                 holder.messageText.setBackgroundResource(R.drawable.message_text_bg);
             }
 
