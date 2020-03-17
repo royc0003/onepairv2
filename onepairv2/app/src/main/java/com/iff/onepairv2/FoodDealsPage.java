@@ -30,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FoodDealsPage extends AppCompatActivity {
 
     ListView listView;
-    ListViewAdapter adapter;
+    DealsListViewAdapter adapter;
     String[] title;
     String[] description;
     int[] icon;
@@ -87,7 +87,7 @@ public class FoodDealsPage extends AppCompatActivity {
                     editor.commit();
                 }
 
-                adapter = new ListViewAdapter(getApplicationContext(), arrayList);
+                adapter = new DealsListViewAdapter(getApplicationContext(), arrayList);
                 listView.setAdapter(adapter);
 
 

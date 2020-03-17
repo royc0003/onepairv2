@@ -1,6 +1,7 @@
 package com.iff.onepairv2;
 
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
             if(from_user.equals(current_uid)){
                 holder.messageText.setBackgroundResource(R.drawable.message_text_bg2);
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) holder.messageText.getLayoutParams();
+                params.horizontalBias = 0.98f; // here is one modification for example. modify anything else you want :)
+                holder.messageText.setLayoutParams(params); // request the view to use the new modified params
             }
             else{
                 holder.messageText.setBackgroundResource(R.drawable.message_text_bg);

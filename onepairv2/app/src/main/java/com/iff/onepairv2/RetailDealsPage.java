@@ -30,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetailDealsPage extends AppCompatActivity {
 
     ListView listView;
-    ListViewAdapter adapter;
+    DealsListViewAdapter adapter;
     String[] title;
     String[] description;
     int[] icon;
@@ -86,7 +86,7 @@ public class RetailDealsPage extends AppCompatActivity {
                     editor.putString("retailCheck", "0");
                     editor.commit();
                 }
-                adapter = new ListViewAdapter(getApplicationContext(), arrayList);
+                adapter = new DealsListViewAdapter(getApplicationContext(), arrayList);
                 listView.setAdapter(adapter);
 
                 //if array list is empty

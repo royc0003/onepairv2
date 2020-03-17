@@ -4,19 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,7 +32,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -87,6 +82,7 @@ public class ChatActivity extends AppCompatActivity {
         mChatUser_target_name = getIntent().getStringExtra("user_name");
         mChatUser_target_image = getIntent().getStringExtra("user_image");
 
+
         //Set Picture in Toolbar
         mChat_target_image = findViewById(R.id.chat_pic);
         Picasso.get().load(mChatUser_target_image).into(mChat_target_image);
@@ -99,7 +95,7 @@ public class ChatActivity extends AppCompatActivity {
         //Current User Details
         mAuth = FirebaseAuth.getInstance();
         mChatUser_own_uid = mAuth.getCurrentUser().getUid();
-       /* mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUser_own_uid);
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUser_own_uid);
         mUserDatabase.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -113,7 +109,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
         //xml elements
         mMsg_field = (EditText) findViewById(R.id.msg_field);
@@ -127,7 +123,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList.setLayoutManager(mLinearLayout);
 
         mMessagesList.setAdapter(mAdapter);
-        loadMesseges();
+        loadMessages();
 
 
         //Create Chat in Database
@@ -157,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
         mSend_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage();
+                sendMessage(mChatUser_own_name);
             }
         });
 
@@ -193,7 +189,7 @@ public class ChatActivity extends AppCompatActivity {
         return false;
     }
 
-    private void loadMesseges() {
+    private void loadMessages() {
         mRootRef.child("Messages").child(mChatUser_own_uid).child(mChatUser_target_uid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -225,7 +221,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void sendMessage() {
+    private void sendMessage(String sender) {
 
         String message = mMsg_field.getText().toString();
 
@@ -250,12 +246,12 @@ public class ChatActivity extends AppCompatActivity {
 
             mRootRef.updateChildren(messageUserMap);
 
-            sendNotification(message);
+            sendNotification(message, sender);
 
         }
     }
 
-    private void sendNotification(String message){
+    private void sendNotification(String message, String sender){
 
         //for sending of background notifications
         //our json object will look like this
@@ -265,7 +261,7 @@ public class ChatActivity extends AppCompatActivity {
         try {
             mainObj.put("to", "/topics/" + topic);
             JSONObject notificationObj = new JSONObject();
-            notificationObj.put("title", "New Message");
+            notificationObj.put("title", "New Message from "+ sender);
             notificationObj.put("body", message);
             mainObj.put("notification", notificationObj);
 

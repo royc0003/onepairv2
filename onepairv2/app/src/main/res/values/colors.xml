@@ -9,5 +9,6 @@
     <color name="entertainment">#FFA450</color>
     <color name="retail">#E7EA71</color>
     <color name="others">#59F384</color>
+    <color name="mytext">#fff2cf</color>
     <color name="textborder">#BDB9B9</color>
 </resources>
