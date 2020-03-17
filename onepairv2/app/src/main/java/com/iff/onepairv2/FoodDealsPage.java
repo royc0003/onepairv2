@@ -6,7 +6,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -69,8 +71,25 @@ public class FoodDealsPage extends AppCompatActivity {
                     //Model model = new Model(deal.getName(), "", deal.getImage());
                     arrayList.add(deal);
                 }
+
+                if(!arrayList.isEmpty()){
+                    String foodImgURL = arrayList.get(0).getImage();
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(FoodDealsPage.this);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("foodImgURL", foodImgURL);
+                    editor.putString("foodCheck", "1");
+                    editor.commit();
+                }
+                else{
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(FoodDealsPage.this);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("foodCheck", "0");
+                    editor.commit();
+                }
+
                 adapter = new ListViewAdapter(getApplicationContext(), arrayList);
                 listView.setAdapter(adapter);
+
 
                 //if array list is empty
                 if(arrayList.size() == 0)

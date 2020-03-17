@@ -6,7 +6,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -68,6 +70,20 @@ public class OthersDealsPage extends AppCompatActivity {
                     //deal.printDeal();
                     //Deal deal = new Model(deal.getName(), "", deal.getImage());
                     arrayList.add(deal);
+                }
+                if(!arrayList.isEmpty()){
+                    String foodImgURL = arrayList.get(0).getImage();
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OthersDealsPage.this);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("othersImgURL", foodImgURL);
+                    editor.putString("othersCheck", "1");
+                    editor.commit();
+                }
+                else{
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OthersDealsPage.this);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("othersCheck", "0");
+                    editor.commit();
                 }
                 adapter = new ListViewAdapter(getApplicationContext(), arrayList);
                 listView.setAdapter(adapter);

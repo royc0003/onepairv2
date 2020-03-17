@@ -6,12 +6,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +25,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private Toolbar mToolbar;
     private CardView foodCard, entertainmentCard, retailCard, othersCard;
+    ViewFlipper v_flipper;
+    ArrayList<String> imgArray = new ArrayList<>(); //arrayList to be used for url
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         entertainmentCard = (CardView) findViewById(R.id.entertainment);
         retailCard = (CardView) findViewById(R.id.retail);
         othersCard = (CardView) findViewById(R.id.others);
+        //Include view flipper here
+        v_flipper = (ViewFlipper)findViewById(R.id.v_flipper);
+        //obtain the url for foodDealsPage/ RetailDealsPage/OtherDealPage/Entertaininment Deal page
+
 
         //add click listener to cards
         foodCard.setOnClickListener(this);
@@ -81,6 +94,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String retailCheck = prefs.getString("retailCheck","");
+        String othersCheck = prefs.getString("othersCheck","");
+        String entertainmentCheck = prefs.getString("entertainmentCheck","");
+        String foodCheck = prefs.getString("foodCheck","");
+        String foodImgURL, entertainmentImgURL,othersImgURL,retailImgURL;
+        System.out.println("This is foodCheck"+ foodCheck);
+        System.out.println(foodCheck.getClass().getSimpleName());
+        String check = "1";
+
+        if(foodCheck.equals(check)){
+            foodImgURL = prefs.getString("foodImgURL","");
+            System.out.println("This is food imgurl" + foodImgURL);
+            imgArray.add(foodImgURL);
+            System.out.println("This is foodImgURL"+ foodImgURL);
+            System.out.println("foodImage: "+ imgArray.get(0));
+        }
+        if(entertainmentCheck.equals(check)){
+            entertainmentImgURL = prefs.getString("entertainmentImgURL","");
+            imgArray.add(entertainmentImgURL);
+            System.out.println("entertainmentImage: "+ imgArray.get(1));
+        }
+        if(retailCheck.equals(check)){
+            retailImgURL = prefs.getString("retailImgURL","");
+            imgArray.add(retailImgURL);
+        }
+        if(othersCheck.equals(check)){
+            othersImgURL = prefs.getString("othersImgURL","");
+            imgArray.add(othersImgURL);
+        }
+       if(!imgArray.isEmpty()){
+           for(String imageUrl : imgArray){
+               flipperImages(imageUrl);
+           }
+       }
+       else{
+           System.out.println("note that array is currently empty");
+       }
+
+       System.out.println("Size of arraylist" + imgArray.size());
+
+    }
+    public void flipperImages(String imageURL){
+        ImageView imageView = new ImageView(this);
+        Picasso.get().load(imageURL).into(imageView);
+
+        v_flipper.addView(imageView);
+
+        v_flipper.setFlipInterval(4000);//4sec
+        v_flipper.setAutoStart(true);
+
+        //animation
+        v_flipper.setInAnimation(this, android.R.anim.slide_in_left);
+        v_flipper.setOutAnimation(this, android.R.anim.slide_out_right);
+
     }
 
     private void saveToken(String token) {
