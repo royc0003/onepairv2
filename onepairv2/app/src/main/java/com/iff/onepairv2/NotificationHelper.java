@@ -8,8 +8,6 @@ import androidx.core.app.NotificationManagerCompat;
 public class NotificationHelper {
 
     private static final String CHANNEL_ID = "simplified coding";
-    private static final String CHANNEL_NAME = "Simplified coding";
-    private static final String CHANNEL_DESC = "Simplified COding notifications";
 
     public static void displayNotification(Context context, String title, String body) {
         NotificationCompat.Builder mBuilder =

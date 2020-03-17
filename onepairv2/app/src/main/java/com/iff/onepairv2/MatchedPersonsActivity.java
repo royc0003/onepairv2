@@ -21,22 +21,22 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class MatchedPersons extends AppCompatActivity {
+public class MatchedPersonsActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private static MatchedPersons single_instance = null;
-    DatabaseReference reff, reff2;
+    private static MatchedPersonsActivity singleInstance = null;
+    private DatabaseReference mDatabaseReference, mDatabaseReference2;
 
     private Toolbar mToolbar;
-    ListView listView;
-    MatchesListViewAdapter adapter;
+    private ListView listView;
+    private MatchesListViewAdapter adapter;
 
-    ArrayList<String> matchUIDs = new ArrayList<String>();
-    ArrayList<Users> allUsers = new ArrayList<Users>();
-    ArrayList<String> name = new ArrayList<String>();
-    ArrayList<String> uid = new ArrayList<String>();
-    ArrayList<String> image = new ArrayList<String>();
-    ArrayList<ChatUser> arrayList = new ArrayList<ChatUser>();
+    private ArrayList<String> matchUids = new ArrayList<String>();
+    private ArrayList<Users> allUsers = new ArrayList<Users>();
+    private ArrayList<String> name = new ArrayList<String>();
+    private ArrayList<String> uid = new ArrayList<String>();
+    private ArrayList<String> image = new ArrayList<String>();
+    private ArrayList<ChatUser> chatList = new ArrayList<ChatUser>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +54,20 @@ public class MatchedPersons extends AppCompatActivity {
         System.out.println("GET CURRENT USER UID " + currentUID);
 
         //retrieve data from matched users for each push key
-        reff2 = FirebaseDatabase.getInstance().getReference("Chat").child(currentUID);
-        reff2.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference2 = FirebaseDatabase.getInstance().getReference("Chat").child(currentUID);
+        mDatabaseReference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot chatSnapshot: dataSnapshot.getChildren()) {
                     Boolean check = (Boolean) chatSnapshot.child("chat").getValue();
                     if(check){
-                        matchUIDs.add(chatSnapshot.getKey());
+                        matchUids.add(chatSnapshot.getKey());
                     }
                 }
 
                 //retrieve all data from database
-                reff = FirebaseDatabase.getInstance().getReference().child("Users");
-                reff.addValueEventListener(new ValueEventListener() {
+                mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                mDatabaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         allUsers.clear();
@@ -77,16 +77,16 @@ public class MatchedPersons extends AppCompatActivity {
                             allUsers.add(users);
                         }
 
-                        for (int i = matchUIDs.size() - 1; i > 0; i--) {
+                        for (int i = matchUids.size() - 1; i > 0; i--) {
                             for (int j = i - 1; j >= 0; j--) {
-                                if (matchUIDs.get(i).equals(matchUIDs.get(j))) {
-                                    matchUIDs.remove(i);
+                                if (matchUids.get(i).equals(matchUids.get(j))) {
+                                    matchUids.remove(i);
                                     break;
                                 }
                             }
                         }
 
-                        for (String muid : matchUIDs) {
+                        for (String muid : matchUids) {
                             for (Users u : allUsers) {
                                 if (muid.equals(u.getUid())) {
                                     name.add(u.getName());
@@ -100,11 +100,11 @@ public class MatchedPersons extends AppCompatActivity {
                         for (int i = 0; i < name.size(); i++) {
                             ChatUser model = new ChatUser(name.get(i), uid.get(i), image.get(i));
                             //bind all strings in an array
-                            arrayList.add(model);
+                            chatList.add(model);
                         }
 
                         //pass results to listViewAdapter class
-                        adapter = new MatchesListViewAdapter(MatchedPersons.this, arrayList);
+                        adapter = new MatchesListViewAdapter(MatchedPersonsActivity.this, chatList);
 
                         //bind the adapter to the listview
                         listView.setAdapter(adapter);
@@ -123,12 +123,12 @@ public class MatchedPersons extends AppCompatActivity {
         });
     }
 
-    public static MatchedPersons getInstance() {
-        if (single_instance == null) {
-            single_instance = new MatchedPersons();
+    public static MatchedPersonsActivity getInstance() {
+        if (singleInstance == null) {
+            singleInstance = new MatchedPersonsActivity();
         }
         System.out.println("GOT INSTANCE");
-        return single_instance;
+        return singleInstance;
     }
 
     @Override
@@ -147,18 +147,18 @@ public class MatchedPersons extends AppCompatActivity {
             sendToStart();
         }
         else if(item.getItemId() == R.id.main_profile_btn){
-            Intent startIntent = new Intent(MatchedPersons.this, ProfileActivity.class);
+            Intent startIntent = new Intent(MatchedPersonsActivity.this, ProfileActivity.class);
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_homepage){
-            Intent startIntent = new Intent(MatchedPersons.this, MainActivity.class);
+            Intent startIntent = new Intent(MatchedPersonsActivity.this, MainActivity.class);
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_chat){
-            Toast.makeText(MatchedPersons.this, "You're already in the Matches Page", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MatchedPersonsActivity.this, "You're already in the Matches Page", Toast.LENGTH_SHORT).show();
         }
         else if(item.getItemId() == R.id.main_all_users){
-            Intent startIntent = new Intent(MatchedPersons.this, AllUsers.class);
+            Intent startIntent = new Intent(MatchedPersonsActivity.this, AllUsers.class);
             startActivity(startIntent);
         }
         //return super.onOptionsItemSelected(item);
@@ -166,7 +166,7 @@ public class MatchedPersons extends AppCompatActivity {
     }
 
     private void sendToStart() {
-        Intent startIntent = new Intent(MatchedPersons.this, StartActivity.class);
+        Intent startIntent = new Intent(MatchedPersonsActivity.this, StartActivity.class);
         startActivity(startIntent);
         finish();
     }

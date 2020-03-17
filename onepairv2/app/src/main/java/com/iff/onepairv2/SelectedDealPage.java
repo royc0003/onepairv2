@@ -35,8 +35,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SelectedDealPage extends AppCompatActivity {
-    Dialog myDialog;
-    AlertDialog alertDialog;
+    private Dialog myDialog;
+    private AlertDialog alertDialog;
     private TextView dealsDetail;
     private ImageView dealsImage;
     private TextView termsCondition;
@@ -281,7 +281,7 @@ public class SelectedDealPage extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void showPopUp(final String name, final String image, String thumb_image, String dealName, String location, final String uid) {
+    public void showPopUp(final String name, final String image, String thumbImage, String dealName, String location, final String uid) {
         System.out.println("INSIDE SHOW POP UP");
         TextView matchName, matchDeal, matchLocation;
         ImageView matchProfileImage;

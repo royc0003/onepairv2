@@ -29,12 +29,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EntertainmentDealsPage extends AppCompatActivity {
 
-    ListView listView;
-    DealsListViewAdapter adapter;
-    String[] title;
-    String[] description;
-    int[] icon;
-    ArrayList<Deal> arrayList = new ArrayList<Deal>();
+    private ListView listView;
+    private DealsListViewAdapter adapter;
+    private ArrayList<Deal> dealList = new ArrayList<Deal>();
     private Toolbar mToolbar;
     private FirebaseAuth mAuth;
 
@@ -69,10 +66,10 @@ public class EntertainmentDealsPage extends AppCompatActivity {
                 for(Deal deal: deals){
                     //deal.printDeal();
                     //Model model = new Model(deal.getName(), "", deal.getImage());
-                    arrayList.add(deal);
+                    dealList.add(deal);
                 }
-                if(!arrayList.isEmpty()){
-                    String foodImgURL = arrayList.get(0).getImage();
+                if(!dealList.isEmpty()){
+                    String foodImgURL = dealList.get(0).getImage();
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(EntertainmentDealsPage.this);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("entertainmentImgURL", foodImgURL);
@@ -85,11 +82,11 @@ public class EntertainmentDealsPage extends AppCompatActivity {
                     editor.putString("entertainmentCheck", "0");
                     editor.commit();
                 }
-                adapter = new DealsListViewAdapter(getApplicationContext(), arrayList);
+                adapter = new DealsListViewAdapter(getApplicationContext(), dealList);
                 listView.setAdapter(adapter);
 
                 //if array list is empty
-                if(arrayList.size() == 0)
+                if(dealList.size() == 0)
                 {
                     Toast toast = Toast.makeText(EntertainmentDealsPage.this, "Sorry there are no deals currently.", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
@@ -151,7 +148,7 @@ public class EntertainmentDealsPage extends AppCompatActivity {
         }
 
         else if(item.getItemId() == R.id.main_chat){
-            Intent startIntent = new Intent(EntertainmentDealsPage.this, MatchedPersons.class);
+            Intent startIntent = new Intent(EntertainmentDealsPage.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_all_users){

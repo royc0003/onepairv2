@@ -20,34 +20,34 @@ import java.util.Locale;
 public class DealsListViewAdapter extends BaseAdapter {
 
     //variables
-    Context mContext;
-    LayoutInflater inflater;
-    List<Deal> modellist;
-    ArrayList<Deal> arrayList;
+    private Context mContext;
+    private LayoutInflater inflater;
+    private List<Deal> modelList;
+    private ArrayList<Deal> dealList;
 
     //constructor
-    public DealsListViewAdapter(Context context, List<Deal> modellist)
+    public DealsListViewAdapter(Context context, List<Deal> modelList)
     {
         mContext = context;
-        this.modellist = modellist;
+        this.modelList = modelList;
         inflater = LayoutInflater.from(mContext);
-        this.arrayList = new ArrayList<Deal>();
-        this.arrayList.addAll(modellist);
+        this.dealList = new ArrayList<Deal>();
+        this.dealList.addAll(modelList);
     }
 
     public class ViewHolder{
-        TextView mTitleTv, mDescTv;
-        ImageView mIconIv;
+        private TextView mTitleTv, mDescTv;
+        private ImageView mIconIv;
     }
 
     @Override
     public int getCount() {
-        return modellist.size();
+        return modelList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return modellist.get(position);
+        return modelList.get(position);
     }
 
     @Override
@@ -74,10 +74,10 @@ public class DealsListViewAdapter extends BaseAdapter {
             holder = (ViewHolder)view.getTag();
         }
         //set the result into textviews
-        holder.mTitleTv.setText(modellist.get(position).getName());
+        holder.mTitleTv.setText(modelList.get(position).getName());
         //holder.mDescTv.setText("");
         //set the result in imageview
-        Picasso.get().load(Uri.parse(modellist.get(position).getImage())).into(holder.mIconIv);
+        Picasso.get().load(Uri.parse(modelList.get(position).getImage())).into(holder.mIconIv);
 
         //listview item clicks, all deals from webscraping put here
         view.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +85,7 @@ public class DealsListViewAdapter extends BaseAdapter {
             public void onClick(View view) {
                 //start newActivity with title for actionbar and text for textview
                 Intent intent = new Intent(mContext, SelectedDealPage.class);
-                intent.putExtra("Deal", modellist.get(position));
+                intent.putExtra("Deal", modelList.get(position));
                 if((Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)){
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
@@ -98,15 +98,15 @@ public class DealsListViewAdapter extends BaseAdapter {
     //filter
     public void filter(String charText){
         charText = charText.toLowerCase(Locale.getDefault());
-        modellist.clear();
+        modelList.clear();
         if(charText.length() == 0){
-            modellist.addAll(arrayList);
+            modelList.addAll(dealList);
         }
         else {
-            for(Deal deal : arrayList) {
+            for(Deal deal : dealList) {
                 if(deal.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)) {
-                    modellist.add(deal);
+                    modelList.add(deal);
                 }
             }
         }

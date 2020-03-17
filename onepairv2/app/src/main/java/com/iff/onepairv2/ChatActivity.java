@@ -44,28 +44,27 @@ import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private String mChatUser_target_uid;
-    private String mChatUser_target_name;
-    private String mChatUser_target_image;
+    private String mChatUserTargetUid;
+    private String mChatUserTargetName;
+    private String mChatUserTargetImage;
 
-    private String mChatUser_own_uid;
-    private String mChatUser_own_name;
-    private String mChatUser_own_image;
+    private String mChatUserOwnUid;
+    private String mChatUserOwnName;
     private Toolbar mToolbar;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
 
     //xml elements
-    private ImageView mChat_target_image;
-    private EditText mMsg_field;
-    private ImageButton mSend_btn;
+    private ImageView mChatTargetImage;
+    private EditText mMsgField;
+    private ImageButton mSendBtn;
     private RecyclerView mMessagesList;
 
-    private final List<Messages> messagesList = new ArrayList<>();
+    private final List<Messages> MESSAGES_LIST = new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
     private MessageAdapter mAdapter;
 
-    private RequestQueue mRequestQue;
+    private RequestQueue mRequestQueue;
     private String URL = "https://fcm.googleapis.com/fcm/send";
     private String topic;
     private DatabaseReference mUserDatabase;
@@ -74,34 +73,34 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        mRequestQue = Volley.newRequestQueue(this);
+        mRequestQueue = Volley.newRequestQueue(this);
 
         //Chat Target Details
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        mChatUser_target_uid = getIntent().getStringExtra("user_id");
-        mChatUser_target_name = getIntent().getStringExtra("user_name");
-        mChatUser_target_image = getIntent().getStringExtra("user_image");
+        mChatUserTargetUid = getIntent().getStringExtra("user_id");
+        mChatUserTargetName = getIntent().getStringExtra("user_name");
+        mChatUserTargetImage = getIntent().getStringExtra("user_image");
 
 
         //Set Picture in Toolbar
-        mChat_target_image = findViewById(R.id.chat_pic);
-        Picasso.get().load(mChatUser_target_image).into(mChat_target_image);
+        mChatTargetImage = findViewById(R.id.chat_pic);
+        Picasso.get().load(mChatUserTargetImage).into(mChatTargetImage);
 
         //Set Title in Toolbar
         mToolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("          " + mChatUser_target_name);
+        getSupportActionBar().setTitle("          " + mChatUserTargetName);
 
         //Current User Details
         mAuth = FirebaseAuth.getInstance();
-        mChatUser_own_uid = mAuth.getCurrentUser().getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUser_own_uid);
+        mChatUserOwnUid = mAuth.getCurrentUser().getUid();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUserOwnUid);
         mUserDatabase.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                mChatUser_own_name = dataSnapshot.child("name").getValue().toString();
+                mChatUserOwnName = dataSnapshot.child("name").getValue().toString();
 
             }
 
@@ -112,12 +111,12 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         //xml elements
-        mMsg_field = (EditText) findViewById(R.id.msg_field);
-        mSend_btn = (ImageButton) findViewById(R.id.chat_send_btn);
+        mMsgField = (EditText) findViewById(R.id.msg_field);
+        mSendBtn = (ImageButton) findViewById(R.id.chat_send_btn);
         mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
         mLinearLayout = new LinearLayoutManager(this);
 
-        mAdapter = new MessageAdapter(messagesList);
+        mAdapter = new MessageAdapter(MESSAGES_LIST);
 
         mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayout);
@@ -127,17 +126,17 @@ public class ChatActivity extends AppCompatActivity {
 
 
         //Create Chat in Database
-        mRootRef.child("Chat").child(mChatUser_own_uid).addValueEventListener(new ValueEventListener() {
+        mRootRef.child("Chat").child(mChatUserOwnUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(mChatUser_target_uid)) {
+                if (!dataSnapshot.hasChild(mChatUserTargetUid)) {
 
                     Map chatAddMap = new HashMap();
                     chatAddMap.put("chat", true);
 
                     Map chatUserMap = new HashMap();
-                    chatUserMap.put("Chat/" + mChatUser_own_uid + "/" + mChatUser_target_uid, chatAddMap);
-                    chatUserMap.put("Chat/" + mChatUser_target_uid + "/" + mChatUser_own_uid, chatAddMap);
+                    chatUserMap.put("Chat/" + mChatUserOwnUid + "/" + mChatUserTargetUid, chatAddMap);
+                    chatUserMap.put("Chat/" + mChatUserTargetUid + "/" + mChatUserOwnUid, chatAddMap);
 
                     mRootRef.updateChildren(chatUserMap);
                 }
@@ -150,10 +149,10 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         //Create Conversation
-        mSend_btn.setOnClickListener(new View.OnClickListener() {
+        mSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage(mChatUser_own_name);
+                sendMessage(mChatUserOwnName);
             }
         });
 
@@ -172,15 +171,15 @@ public class ChatActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (item.getItemId() == R.id.unmatch) {
-            mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
-            mRootRef.child("Chat").child(mChatUser_target_uid).child(mChatUser_own_uid).child("chat").setValue(false);
-            Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
+            mRootRef.child("Chat").child(mChatUserOwnUid).child(mChatUserTargetUid).child("chat").setValue(false);
+            mRootRef.child("Chat").child(mChatUserTargetUid).child(mChatUserOwnUid).child("chat").setValue(false);
+            Intent startIntent = new Intent(ChatActivity.this, MatchedPersonsActivity.class);
             startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(startIntent);
             finish();
         } else if (item.getItemId() == R.id.close_chat) {
-            mRootRef.child("Chat").child(mChatUser_own_uid).child(mChatUser_target_uid).child("chat").setValue(false);
-            Intent startIntent = new Intent(ChatActivity.this, MatchedPersons.class);
+            mRootRef.child("Chat").child(mChatUserOwnUid).child(mChatUserTargetUid).child("chat").setValue(false);
+            Intent startIntent = new Intent(ChatActivity.this, MatchedPersonsActivity.class);
             startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(startIntent);
             finish();
@@ -190,13 +189,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadMessages() {
-        mRootRef.child("Messages").child(mChatUser_own_uid).child(mChatUser_target_uid).addChildEventListener(new ChildEventListener() {
+        mRootRef.child("Messages").child(mChatUserOwnUid).child(mChatUserTargetUid).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Messages message = dataSnapshot.getValue(Messages.class);
-                messagesList.add(message);
+                MESSAGES_LIST.add(message);
                 mAdapter.notifyDataSetChanged();
-                mMessagesList.scrollToPosition(messagesList.size() - 1);
+                mMessagesList.scrollToPosition(MESSAGES_LIST.size() - 1);
             }
 
             @Override
@@ -223,26 +222,26 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendMessage(String sender) {
 
-        String message = mMsg_field.getText().toString();
+        String message = mMsgField.getText().toString();
 
         if (!TextUtils.isEmpty(message)) {
 
-            String current_user_ref = "Messages/" + mChatUser_own_uid + "/" + mChatUser_target_uid;
-            String target_user_ref = "Messages/" + mChatUser_target_uid + "/" + mChatUser_own_uid;
+            String current_user_ref = "Messages/" + mChatUserOwnUid + "/" + mChatUserTargetUid;
+            String target_user_ref = "Messages/" + mChatUserTargetUid + "/" + mChatUserOwnUid;
 
-            DatabaseReference user_message_push = mRootRef.child("Messages").child(mChatUser_own_uid).child(mChatUser_target_uid).push();
+            DatabaseReference user_message_push = mRootRef.child("Messages").child(mChatUserOwnUid).child(mChatUserTargetUid).push();
             String push_id = user_message_push.getKey();
 
             Map messageMap = new HashMap();
             messageMap.put("message", message);
             messageMap.put("time", ServerValue.TIMESTAMP);
-            messageMap.put("from", mChatUser_own_uid);
+            messageMap.put("from", mChatUserOwnUid);
 
             Map messageUserMap = new HashMap();
             messageUserMap.put(current_user_ref + "/" + push_id + "/", messageMap);
             messageUserMap.put(target_user_ref + "/" + push_id + "/", messageMap);
 
-            mMsg_field.setText("");
+            mMsgField.setText("");
 
             mRootRef.updateChildren(messageUserMap);
 
@@ -256,8 +255,8 @@ public class ChatActivity extends AppCompatActivity {
         //for sending of background notifications
         //our json object will look like this
         JSONObject mainObj = new JSONObject();
-        topic = mChatUser_own_uid + mChatUser_target_uid;
-        System.out.println("NAME NAME" + mChatUser_own_name);
+        topic = mChatUserOwnUid + mChatUserTargetUid;
+        System.out.println("NAME NAME" + mChatUserOwnName);
         try {
             mainObj.put("to", "/topics/" + topic);
             JSONObject notificationObj = new JSONObject();
@@ -287,7 +286,7 @@ public class ChatActivity extends AppCompatActivity {
                     return header;
                 }
             };
-            mRequestQue.add(request);
+            mRequestQueue.add(request);
         } catch (JSONException e) {
             e.printStackTrace();
         }

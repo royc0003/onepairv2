@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private Toolbar mToolbar;
     private CardView foodCard, entertainmentCard, retailCard, othersCard;
-    ViewFlipper v_flipper;
-    ArrayList<String> imgArray = new ArrayList<>(); //arrayList to be used for url
+    private ViewFlipper vFlipper;
+    private ArrayList<String> imgArray = new ArrayList<>(); //arrayList to be used for url
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         retailCard = (CardView) findViewById(R.id.retail);
         othersCard = (CardView) findViewById(R.id.others);
         //Include view flipper here
-        v_flipper = (ViewFlipper)findViewById(R.id.v_flipper);
+        vFlipper = (ViewFlipper)findViewById(R.id.v_flipper);
         //obtain the url for foodDealsPage/ RetailDealsPage/OtherDealPage/Entertaininment Deal page
 
 
@@ -136,18 +136,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        System.out.println("Size of arraylist" + imgArray.size());
 
     }
+
     public void flipperImages(String imageURL){
         ImageView imageView = new ImageView(this);
         Picasso.get().load(imageURL).into(imageView);
 
-        v_flipper.addView(imageView);
+        vFlipper.addView(imageView);
 
-        v_flipper.setFlipInterval(4000);//4sec
-        v_flipper.setAutoStart(true);
+        vFlipper.setFlipInterval(4000);//4sec
+        vFlipper.setAutoStart(true);
 
         //animation
-        v_flipper.setInAnimation(this, android.R.anim.slide_in_left);
-        v_flipper.setOutAnimation(this, android.R.anim.slide_out_right);
+        vFlipper.setInAnimation(this, android.R.anim.slide_in_left);
+        vFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
 
     }
 
@@ -195,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this, "You're already in the Homepage", Toast.LENGTH_SHORT).show();
         }
         else if(item.getItemId() == R.id.main_chat){
-            Intent startIntent = new Intent(MainActivity.this, MatchedPersons.class);
+            Intent startIntent = new Intent(MainActivity.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_all_users){
