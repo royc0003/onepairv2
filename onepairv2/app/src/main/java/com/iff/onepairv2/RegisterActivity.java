@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(final String display_name, String email, String password){
+    private void registerUser(final String displayName, String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
                     HashMap<String, String> userMap = new HashMap<>();
-                    userMap.put("name", display_name);
+                    userMap.put("name", displayName);
                     userMap.put("image", "https://firebasestorage.googleapis.com/v0/b/onepairv2.appspot.com/o/profile_images%2Fdefault.png?alt=media&token=3d4d5d85-b050-481b-87ab-c0ae09dbda32");
                     userMap.put("thumb_image", "https://firebasestorage.googleapis.com/v0/b/onepairv2.appspot.com/o/profile_images%2Fdefault.png?alt=media&token=3d4d5d85-b050-481b-87ab-c0ae09dbda32");
                     userMap.put("uid", uid);

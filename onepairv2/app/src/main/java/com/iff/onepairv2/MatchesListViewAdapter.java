@@ -19,33 +19,28 @@ import java.util.Locale;
 public class MatchesListViewAdapter extends BaseAdapter {
 
     //variables
-    Context mContext;
-    LayoutInflater inflater;
-    List<ChatUser> modellist;
-    ArrayList<ChatUser> arrayList;
+    private Context mContext;
+    private LayoutInflater inflater;
+    private List<ChatUser> modelList;
+    private ArrayList<ChatUser> chatList;
 
     //constructor
-    public MatchesListViewAdapter(Context context, List<ChatUser> modellist) {
+    public MatchesListViewAdapter(Context context, List<ChatUser> modelList) {
         mContext = context;
-        this.modellist = modellist;
+        this.modelList = modelList;
         inflater = LayoutInflater.from(mContext);
-        this.arrayList = new ArrayList<ChatUser>();
-        this.arrayList.addAll(modellist);
-    }
-
-    public class ViewHolder {
-        TextView mTitleTv, mDescTv;
-        ImageView mIconIv;
+        this.chatList = new ArrayList<ChatUser>();
+        this.chatList.addAll(modelList);
     }
 
     @Override
     public int getCount() {
-        return modellist.size();
+        return modelList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return modellist.get(position);
+        return modelList.get(position);
     }
 
     @Override
@@ -70,10 +65,10 @@ public class MatchesListViewAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         //set the result into textviews
-        holder.mTitleTv.setText(modellist.get(position).getTitle());
+        holder.mTitleTv.setText(modelList.get(position).getTitle());
         //holder.mDescTv.setText(modellist.get(position).getDesc());
         //set the result in imageview
-        Picasso.get().load(Uri.parse(modellist.get(position).getIcon())).into(holder.mIconIv);
+        Picasso.get().load(Uri.parse(modelList.get(position).getIcon())).into(holder.mIconIv);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,9 +77,9 @@ public class MatchesListViewAdapter extends BaseAdapter {
                 System.out.println("ONCLICK CHAT");
                 //start newActivity with title for actionbar and text for textview
                 Intent intent = new Intent(mContext, ChatActivity.class);
-                intent.putExtra("user_id", modellist.get(position).getDesc());
-                intent.putExtra("user_name", modellist.get(position).getTitle());
-                intent.putExtra("user_image", modellist.get(position).getIcon());
+                intent.putExtra("user_id", modelList.get(position).getDesc());
+                intent.putExtra("user_name", modelList.get(position).getTitle());
+                intent.putExtra("user_image", modelList.get(position).getIcon());
                 mContext.startActivity(intent);
             }
         });
@@ -94,18 +89,23 @@ public class MatchesListViewAdapter extends BaseAdapter {
     //filter
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
-        modellist.clear();
+        modelList.clear();
         if (charText.length() == 0) {
-            modellist.addAll(arrayList);
+            modelList.addAll(chatList);
         } else {
-            for (ChatUser model : arrayList) {
+            for (ChatUser model : chatList) {
                 if (model.getTitle().toLowerCase(Locale.getDefault())
                         .contains(charText)) {
-                    modellist.add(model);
+                    modelList.add(model);
                 }
             }
         }
         notifyDataSetChanged();
+    }
+
+    public class ViewHolder {
+        TextView mTitleTv, mDescTv;
+        ImageView mIconIv;
     }
 }
 

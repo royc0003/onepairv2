@@ -1,17 +1,12 @@
 package com.iff.onepairv2;
 
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,18 +15,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    static int matched = 0;
+    protected static int matched = 0;
     private String subscribeTopic;
     private FirebaseAuth mAuth;
-    private String ownUID;
+    private String ownUid;
 
 
 
@@ -111,8 +103,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                         //subscribe both users to same topic
                         mAuth = FirebaseAuth.getInstance();
-                        ownUID = mAuth.getCurrentUser().getUid();
-                        subscribeTopic = uid + ownUID;
+                        ownUid = mAuth.getCurrentUser().getUid();
+                        subscribeTopic = uid + ownUid;
                         FirebaseMessaging.getInstance().subscribeToTopic(subscribeTopic);
 
                         // Replace with popup soon

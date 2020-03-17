@@ -14,13 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,9 +30,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.util.Random;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -46,8 +40,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ImageView mProfilePic;
     private TextView mDisplayName;
-    private Button profile_changename_btn;
-    private Button profile_changepic_btn;
+    private Button profileChangeNameBtn;
+    private Button profileChangePicBtn;
 
     private ProgressDialog mProfileImageDialog;
 
@@ -66,8 +60,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         mProfilePic = (ImageView) findViewById(R.id.profilepic);
         mDisplayName = (TextView) findViewById(R.id.profilename);
-        profile_changename_btn = (Button) findViewById(R.id.changename);
-        profile_changepic_btn = (Button) findViewById(R.id.changeimage);
+        profileChangeNameBtn = (Button) findViewById(R.id.changename);
+        profileChangePicBtn = (Button) findViewById(R.id.changeimage);
 
         mToolbar = (Toolbar) findViewById(R.id.profile_page_toolbar);
         setSupportActionBar(mToolbar);
@@ -95,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        profile_changename_btn.setOnClickListener(new View.OnClickListener() {
+        profileChangeNameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name_value = mDisplayName.getText().toString();
@@ -106,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        profile_changepic_btn.setOnClickListener(new View.OnClickListener() {
+        profileChangePicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galleryIntent = new Intent();
@@ -185,7 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_chat){
-            Intent startIntent = new Intent(ProfileActivity.this, MatchedPersons.class);
+            Intent startIntent = new Intent(ProfileActivity.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
         }
         else if(item.getItemId() == R.id.main_all_users){
