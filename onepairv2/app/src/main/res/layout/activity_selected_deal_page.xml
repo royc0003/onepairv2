@@ -82,6 +82,7 @@
             android:id="@+id/matchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:background="@android:color/holo_green_light"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
