@@ -156,11 +156,11 @@ public class MatchedPersonsActivity extends AppCompatActivity {
         }
         else if(item.getItemId() == R.id.main_chat){
             Toast.makeText(MatchedPersonsActivity.this, "You're already in the Matches Page", Toast.LENGTH_SHORT).show();
-        }
+        }/*
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(MatchedPersonsActivity.this, AllUsers.class);
             startActivity(startIntent);
-        }
+        }*/
         //return super.onOptionsItemSelected(item);
         return false;
     }

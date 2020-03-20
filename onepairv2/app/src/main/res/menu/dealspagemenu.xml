@@ -12,16 +12,18 @@
     <item
         android:id="@+id/main_chat"
         android:title="Matches" />
-
+    <!--
     <item
         android:id="@+id/main_all_users"
-        android:title="All Users" /><item
-android:id="@+id/main_logout_btn"
-android:title="Log Out" />
+        android:title="All Users" />-->
+    <item
+        android:id="@+id/main_logout_btn"
+        android:title="Log Out" />
 
-<item android:id="@+id/action_search"
-android:title="Search"
-android:icon="@android:drawable/ic_menu_search"
-app:showAsAction="always"
-app:actionViewClass="androidx.appcompat.widget.SearchView" />
+    <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 </menu>

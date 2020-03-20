@@ -61,7 +61,7 @@ public class SelectedDealPage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://128.199.167.80:8080/")
+                .baseUrl(BackEndController.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BackEndController backEndController = retrofit.create(BackEndController.class);
@@ -192,7 +192,7 @@ public class SelectedDealPage extends AppCompatActivity {
                             if(MyFirebaseMessagingService.matched == 0){
                                 //JOZUA ADD YOUR CODE HERE TO REMOVE THIS PERSON'S REQUEST
                                 Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl("http://128.199.167.80:8080/")
+                                        .baseUrl(BackEndController.URL)
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
                                 BackEndController backEndController = retrofit.create(BackEndController.class);
@@ -244,7 +244,7 @@ public class SelectedDealPage extends AppCompatActivity {
 
                     //add Request to server on click
                     Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("http://128.199.167.80:8080/")
+                            .baseUrl(BackEndController.URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);

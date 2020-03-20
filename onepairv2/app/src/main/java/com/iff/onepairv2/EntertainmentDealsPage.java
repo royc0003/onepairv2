@@ -50,7 +50,7 @@ public class EntertainmentDealsPage extends AppCompatActivity {
         getSupportActionBar().setTitle("Entertainment");
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://128.199.167.80:8080/")
+                .baseUrl(BackEndController.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BackEndController backEndController = retrofit.create(BackEndController.class);
@@ -150,11 +150,11 @@ public class EntertainmentDealsPage extends AppCompatActivity {
         else if(item.getItemId() == R.id.main_chat){
             Intent startIntent = new Intent(EntertainmentDealsPage.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
-        }
+        }/*
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(EntertainmentDealsPage.this, AllUsers.class);
             startActivity(startIntent);
-        }
+        }*/
         //return super.onOptionsItemSelected(item);
         return false;
     }
