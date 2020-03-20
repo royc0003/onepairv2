@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.datatransport.runtime.backends.BackendFactory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +28,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -42,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar mToolbar;
     private CardView foodCard, entertainmentCard, retailCard, othersCard;
     private ViewFlipper vFlipper;
-    private ArrayList<String> imgArray = new ArrayList<>(); //arrayList to be used for url
+    private ArrayList<String> imgArray = new ArrayList<String>(); //arrayList to be used for url
+    private ArrayList<Deal> dealList = new ArrayList<Deal>(); // added arrayList of deals
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+
+        Retrofit retrofit2 = new Retrofit.Builder()
+                .baseUrl("http://128.199.167.80:8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BackEndController backEndController2 =retrofit2.create(BackEndController.class);
+        Call<ArrayList<Deal>> call = backEndController2.getAllDeals();
+        call.enqueue(new Callback<ArrayList<Deal>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Deal>> call, Response<ArrayList<Deal>> response) {
+                if(!response.isSuccessful()){
+                    System.out.print("Unable to retrieve data properly");
+                    return;
+                }
+                ArrayList<Deal> deals = response.body();
+                for(Deal deal: deals){
+                    dealList.add(deal);
+                }
+                System.out.println("the total amount of deals in MainActivity" + dealList.size());
+                imgArray = useFlipperImages(dealList); //
+                if(imgArray.isEmpty()){
+                    System.out.println("imgArray size is currently empty");
+                }
+                else{
+                    System.out.println("Imagearray size is currently NOT empty: " + imgArray.size());
+                    System.out.println("hello: "+ imgArray.get(3));
+                    for(String imgURL: imgArray){
+                        flipperImages(imgURL);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Deal>> call, Throwable t) {
+                System.out.println("***Unable to access retrofit properly... *** ");
+            }
+        });
+       /*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String retailCheck = prefs.getString("retailCheck","");
         String othersCheck = prefs.getString("othersCheck","");
         String entertainmentCheck = prefs.getString("entertainmentCheck","");
@@ -123,8 +164,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(othersCheck.equals(check)){
             othersImgURL = prefs.getString("othersImgURL","");
             imgArray.add(othersImgURL);
-        }
-       if(!imgArray.isEmpty()){
+        }*/
+       /*if(!imgArray.isEmpty()){
            for(String imageUrl : imgArray){
                flipperImages(imageUrl);
            }
@@ -133,8 +174,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            System.out.println("note that array is currently empty");
        }
 
-       System.out.println("Size of arraylist" + imgArray.size());
+       System.out.println("Size of arraylist" + imgArray.size());*/
+       // add flipper thing here
 
+
+    }
+
+    public ArrayList<String> useFlipperImages(ArrayList<Deal> deal){
+        ArrayList<Deal> tempDeal = deal;
+        ArrayList<String> tempString = new ArrayList<>();
+        if(!tempDeal.isEmpty()){
+            for(Deal deals: tempDeal){
+                tempString.add(deals.getImage());
+            }
+        }
+        System.out.println(tempString.get(0));
+        return tempString;
     }
 
     public void flipperImages(String imageURL){
