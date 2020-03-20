@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     System.out.println("hello: "+ imgArray.get(3));
                     for(String imgURL: imgArray){
                         flipperImages(imgURL);
+                        System.out.println("current url"+imgURL);
                     }
                 }
             }
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //animation
         vFlipper.setInAnimation(this, android.R.anim.slide_in_left);
         vFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
+        vFlipper.startFlipping();
 
     }
 
