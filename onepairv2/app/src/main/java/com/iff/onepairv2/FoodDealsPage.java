@@ -151,11 +151,11 @@ public class FoodDealsPage extends AppCompatActivity {
         else if(item.getItemId() == R.id.main_chat){
             Intent startIntent = new Intent(FoodDealsPage.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
-        }
+        }/*
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(FoodDealsPage.this, AllUsers.class);
             startActivity(startIntent);
-        }
+        }*/
         //return super.onOptionsItemSelected(item);
         return false;
     }

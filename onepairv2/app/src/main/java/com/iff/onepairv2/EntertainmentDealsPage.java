@@ -150,11 +150,11 @@ public class EntertainmentDealsPage extends AppCompatActivity {
         else if(item.getItemId() == R.id.main_chat){
             Intent startIntent = new Intent(EntertainmentDealsPage.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
-        }
+        }/*
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(EntertainmentDealsPage.this, AllUsers.class);
             startActivity(startIntent);
-        }
+        }*/
         //return super.onOptionsItemSelected(item);
         return false;
     }

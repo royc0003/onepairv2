@@ -254,11 +254,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(item.getItemId() == R.id.main_chat){
             Intent startIntent = new Intent(MainActivity.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
-        }
+        }/*
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(MainActivity.this, AllUsers.class);
             startActivity(startIntent);
-        }
+        }*/
         //return super.onOptionsItemSelected(item);
         return false;
     }

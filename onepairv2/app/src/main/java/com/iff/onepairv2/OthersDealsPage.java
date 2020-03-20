@@ -149,11 +149,11 @@ public class OthersDealsPage extends AppCompatActivity {
         else if(item.getItemId() == R.id.main_chat){
             Intent startIntent = new Intent(OthersDealsPage.this, MatchedPersonsActivity.class);
             startActivity(startIntent);
-        }
+        }/*
         else if(item.getItemId() == R.id.main_all_users){
             Intent startIntent = new Intent(OthersDealsPage.this, AllUsers.class);
             startActivity(startIntent);
-        }
+        }*/
         //return super.onOptionsItemSelected(item);
         return false;
     }
