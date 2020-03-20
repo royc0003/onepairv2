@@ -51,7 +51,7 @@ public class RetailDealsPage extends AppCompatActivity {
         getSupportActionBar().setTitle("Retail");
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://128.199.167.80:8080/")
+                .baseUrl(BackEndController.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BackEndController backEndController = retrofit.create(BackEndController.class);

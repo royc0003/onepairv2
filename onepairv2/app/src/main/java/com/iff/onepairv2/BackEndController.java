@@ -7,6 +7,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface BackEndController {
+    public static final String URL = "http://128.199.167.80:8080/";
+
     @GET("getAllDeals")
     Call<ArrayList<Deal>> getAllDeals();
 

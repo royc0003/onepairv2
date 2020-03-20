@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         Retrofit retrofit2 = new Retrofit.Builder()
-                .baseUrl("http://128.199.167.80:8080/")
+                .baseUrl(BackEndController.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BackEndController backEndController2 =retrofit2.create(BackEndController.class);
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // Update django db too
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://128.199.167.80:8080/")
+                    .baseUrl(BackEndController.URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             BackEndController backEndController = retrofit.create(BackEndController.class);
