@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.admin.SystemUpdatePolicy;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -59,6 +60,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String mChatUserOwnUid;
     private String mChatUserOwnName;
+    private String mChatUserOwnImage;
     private Toolbar mToolbar;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
@@ -84,6 +86,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         mRequestQueue = Volley.newRequestQueue(this);
 
+
         //Chat Target Details
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mChatUserTargetUid = getIntent().getStringExtra("user_id");
@@ -103,6 +106,8 @@ public class ChatActivity extends AppCompatActivity {
         //Current User Details
         mAuth = FirebaseAuth.getInstance();
         mChatUserOwnUid = mAuth.getCurrentUser().getUid();
+        mChatUserOwnName = mAuth.getCurrentUser().getDisplayName();
+        System.out.println("DISPLAY NAME IS " + mChatUserOwnName);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUserOwnUid);
         mUserDatabase.addValueEventListener(new ValueEventListener() {
 
@@ -280,46 +285,63 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void sendNotification(String message, String sender){
+    private void sendNotification(final String message, final String sender) {
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUserOwnUid);
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //for sending of background notifications
+                //our json object will look like this
+                JSONObject mainObj = new JSONObject();
+                topic = mChatUserOwnUid + mChatUserTargetUid;
+                //System.out.println("NAME NAME" + mChatUserOwnName);
 
-        //for sending of background notifications
-        //our json object will look like this
-        JSONObject mainObj = new JSONObject();
-        topic = mChatUserOwnUid + mChatUserTargetUid;
-        System.out.println("NAME NAME" + mChatUserOwnName);
-        try {
-            mainObj.put("to", "/topics/" + topic);
-            JSONObject notificationObj = new JSONObject();
-            notificationObj.put("title", "New Message from "+ sender);
-            notificationObj.put("body", message);
-            mainObj.put("notification", notificationObj);
+                //get data from database
+                mChatUserOwnImage = dataSnapshot.child("image").getValue().toString();
+               // System.out.println("IMAGE MY OWN " + mChatUserOwnImage);
+                mChatUserOwnName = dataSnapshot.child("name").getValue().toString();
 
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, mainObj, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    //codes here will run when notification is sent
-                    System.out.println("MESSAGE SENT");
+                try {
+                    mainObj.put("to", "/topics/" + topic);
+                    JSONObject notificationObj = new JSONObject();
+                    notificationObj.put("title", "New Message from " + sender);
+                    notificationObj.put("body", message);
+
+                    JSONObject extraData = new JSONObject();
+
+                    extraData.put("messageFrom", mChatUserOwnUid);
+                    extraData.put("image", mChatUserOwnImage);
+                    extraData.put("name", mChatUserOwnName);
+
+                    mainObj.put("notification", notificationObj);
+                    mainObj.put("data", extraData);
+
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL, mainObj, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            //codes here will run when notification is sent
+                            System.out.println("MESSAGE SENT");
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //codes here will run on error
+                            System.out.println("MESSAGE FAILED");
+                        }
+                    }
+                    ) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> header = new HashMap<>();
+                            header.put("content-type", "application/json");
+                            header.put("authorization", "key=AIzaSyAOPEEMta24s-K-XyunD5xpBGsNQ6FGcwc");
+                            return header;
+                        }
+                    };
+                    mRequestQueue.add(request);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //codes here will run on error
-                    System.out.println("MESSAGE FAILED");
-                }
-            }
-            ) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> header = new HashMap<>();
-                    header.put("content-type", "application/json");
-                    header.put("authorization", "key=AIzaSyAOPEEMta24s-K-XyunD5xpBGsNQ6FGcwc");
-                    return header;
-                }
-            };
-            mRequestQueue.add(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         /*Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -331,5 +353,14 @@ public class ChatActivity extends AppCompatActivity {
 
         builder.setContentIntent(pendingIntent);*/
 
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
+
 }

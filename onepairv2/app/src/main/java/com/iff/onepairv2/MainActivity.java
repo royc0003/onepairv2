@@ -52,6 +52,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(getIntent().hasExtra("messageFrom")) {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            intent.putExtra("user_id", getIntent().getStringExtra("messageFrom"));
+            intent.putExtra("user_name", getIntent().getStringExtra("name"));
+            intent.putExtra("user_image", getIntent().getStringExtra("image"));
+            System.out.println("OWN IMAGE ISSS" + getIntent().getStringExtra("image"));
+            startActivity(intent);
+        }
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
