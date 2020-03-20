@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,6 +45,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -171,12 +180,33 @@ public class ChatActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (item.getItemId() == R.id.unmatch) {
-            mRootRef.child("Chat").child(mChatUserOwnUid).child(mChatUserTargetUid).child("chat").setValue(false);
-            mRootRef.child("Chat").child(mChatUserTargetUid).child(mChatUserOwnUid).child("chat").setValue(false);
-            Intent startIntent = new Intent(ChatActivity.this, MatchedPersonsActivity.class);
-            startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(startIntent);
-            finish();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BackEndController.URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            BackEndController backEndController = retrofit.create(BackEndController.class);
+            Call<Void> call = backEndController.addBlacklist(mChatUserOwnUid, mChatUserTargetUid);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                    if(!response.isSuccessful()){
+                        System.out.println("Oops something went wrong!");
+                        return;
+                    }
+                    mRootRef.child("Chat").child(mChatUserOwnUid).child(mChatUserTargetUid).child("chat").setValue(false);
+                    mRootRef.child("Chat").child(mChatUserTargetUid).child(mChatUserOwnUid).child("chat").setValue(false);
+                    Intent startIntent = new Intent(ChatActivity.this, MatchedPersonsActivity.class);
+                    startIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(startIntent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    System.out.println("Oops something went wrong!");
+                }
+            });
+
         } else if (item.getItemId() == R.id.close_chat) {
             mRootRef.child("Chat").child(mChatUserOwnUid).child(mChatUserTargetUid).child("chat").setValue(false);
             Intent startIntent = new Intent(ChatActivity.this, MatchedPersonsActivity.class);

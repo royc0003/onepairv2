@@ -136,49 +136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 System.out.println("***Unable to access retrofit properly... *** ");
             }
         });
-       /*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String retailCheck = prefs.getString("retailCheck","");
-        String othersCheck = prefs.getString("othersCheck","");
-        String entertainmentCheck = prefs.getString("entertainmentCheck","");
-        String foodCheck = prefs.getString("foodCheck","");
-        String foodImgURL, entertainmentImgURL,othersImgURL,retailImgURL;
-        System.out.println("This is foodCheck"+ foodCheck);
-        System.out.println(foodCheck.getClass().getSimpleName());
-        String check = "1";
-
-        if(foodCheck.equals(check)){
-            foodImgURL = prefs.getString("foodImgURL","");
-            System.out.println("This is food imgurl" + foodImgURL);
-            imgArray.add(foodImgURL);
-            System.out.println("This is foodImgURL"+ foodImgURL);
-            System.out.println("foodImage: "+ imgArray.get(0));
-        }
-        if(entertainmentCheck.equals(check)){
-            entertainmentImgURL = prefs.getString("entertainmentImgURL","");
-            imgArray.add(entertainmentImgURL);
-            System.out.println("entertainmentImage: "+ imgArray.get(1));
-        }
-        if(retailCheck.equals(check)){
-            retailImgURL = prefs.getString("retailImgURL","");
-            imgArray.add(retailImgURL);
-        }
-        if(othersCheck.equals(check)){
-            othersImgURL = prefs.getString("othersImgURL","");
-            imgArray.add(othersImgURL);
-        }*/
-       /*if(!imgArray.isEmpty()){
-           for(String imageUrl : imgArray){
-               flipperImages(imageUrl);
-           }
-       }
-       else{
-           System.out.println("note that array is currently empty");
-       }
-
-       System.out.println("Size of arraylist" + imgArray.size());*/
-       // add flipper thing here
-
-
     }
 
     public ArrayList<String> useFlipperImages(ArrayList<Deal> deal){
