@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
@@ -248,27 +249,41 @@ public class SelectedDealPage extends AppCompatActivity {
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     BackEndController backEndController = retrofit.create(BackEndController.class);
-                    Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
+                    final Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
                     System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    call.enqueue(new Callback<Void>() {
+                    Handler handler = new Handler();
+                    int counter = (int) getRandomIntegerBetweenRange(0,3000);
+
+                    handler.postDelayed(new Runnable() {
                         @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if(!response.isSuccessful()){
-                                mQueueProgress.dismiss();
-                                Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
-                                toast.show();
-                                return;
-                            }
-                            Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+                        public void run() {
+                            call.enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    if(!response.isSuccessful()){
+                                        mQueueProgress.dismiss();
+                                        Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try againz", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                        return;
+                                    }
+                                    Toast toast = Toast.makeText(SelectedDealPage.this, "Successfully added to wait list", Toast.LENGTH_SHORT);
+
+                                }
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    mQueueProgress.dismiss();
+                                    Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            });
 
                         }
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            mQueueProgress.dismiss();
-                            Toast toast = Toast.makeText(SelectedDealPage.this, "An error occurred. Please try again", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    });
+                    }, counter);
+
+
+
+
+
 
 
                 }
@@ -331,6 +346,11 @@ public class SelectedDealPage extends AppCompatActivity {
         matchLocation.setText(location);
 
         myDialog.show();
+    }
+
+    public static double getRandomIntegerBetweenRange(double min, double max){
+        double x = (int)(Math.random()*((max-min)+1))+min;
+        return x;
     }
 
 

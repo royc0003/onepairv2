@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vFlipper.setInAnimation(this, android.R.anim.slide_in_left);
         vFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
         vFlipper.startFlipping();
-
     }
 
     private void saveToken(String token) {
