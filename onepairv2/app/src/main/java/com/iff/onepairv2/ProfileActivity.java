@@ -96,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent change_name_int = new Intent(ProfileActivity.this, ChangeNameActivity.class);
                 change_name_int.putExtra("OldName", name_value);
                 startActivity(change_name_int);
+                finish();
 
             }
         });

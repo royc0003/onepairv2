@@ -72,6 +72,7 @@ public class ChangeNameActivity extends AppCompatActivity {
                             mUpdateNameProgress.dismiss();
                             Intent done_change_name = new Intent(ChangeNameActivity.this, ProfileActivity.class);
                             startActivity(done_change_name);
+                            finish();
                         }
                         else{
                             Toast.makeText(getApplicationContext(), "Error.", Toast.LENGTH_LONG).show();
