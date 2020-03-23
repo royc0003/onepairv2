@@ -252,7 +252,7 @@ public class SelectedDealPage extends AppCompatActivity {
                     final Call<Void> call = backEndController.addRequest(FirebaseAuth.getInstance().getCurrentUser().getUid(), deal.getId(), c);
                     System.out.println(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     Handler handler = new Handler();
-                    int counter = (int) getRandomIntegerBetweenRange(0,10000);
+                    int counter = (int) getRandomIntegerBetweenRange(0,3000);
 
                     handler.postDelayed(new Runnable() {
                         @Override
