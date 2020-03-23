@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Log and toast
                         //String msg = getString(R.string.msg_token_fmt, token);
                         Log.d("token ID", token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(MainActivity.this, "Token saved", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(MainActivity.this, "Token saved", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
