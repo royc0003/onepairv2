@@ -35,20 +35,55 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Activity for a selected deal
+ */
 public class SelectedDealPage extends AppCompatActivity {
+    /**
+     * Shows a pop-up of the matched user
+     */
     private Dialog myDialog;
+    /**
+     * Dialog to be appeared if user does not select a single location before hitting the matching button
+     */
     private AlertDialog alertDialog;
+    /**
+     * Details of the selected deal
+     */
     private TextView dealsDetail;
+    /**
+     * Reveals selected deal image
+     */
     private ImageView dealsImage;
+    /**
+     * Terms and Condition for the deal
+     */
     private TextView termsCondition;
+    /**
+     * Start time and end time of the deal
+     */
     private TextView startEnd;
+    /**
+     * List of location to select
+     */
     private ArrayList<Location> locations;
+    /**
+     * Firebase user authentication
+     */
     private FirebaseAuth mAuth;
-
+    /**
+     * Buffering animation for finding a match
+     */
     public static ProgressDialog mQueueProgress;
-
+    /**
+     * Deal object
+     */
     private Deal deal;
 
+    /**
+     * Called when activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +144,9 @@ public class SelectedDealPage extends AppCompatActivity {
         });
     }
 
+    /**
+     * Show an alert box for user to choose their lcoation
+     */
     //used for locationAlertBox
     private void locationAlertBox() {
         //instantiate alertdialog builder
@@ -296,6 +334,15 @@ public class SelectedDealPage extends AppCompatActivity {
         alertDialog.show();
     }
 
+    /**
+     * Show a successfully matched pop-up
+     * @param name Name of matched user
+     * @param image Image of matched user
+     * @param thumbImage ThumbImage of matched user
+     * @param dealName Name of deal
+     * @param location Name of location
+     * @param uid Uid of matched user
+     */
     public void showPopUp(final String name, final String image, String thumbImage, String dealName, String location, final String uid) {
         System.out.println("INSIDE SHOW POP UP");
         TextView matchName, matchDeal, matchLocation;
@@ -348,6 +395,12 @@ public class SelectedDealPage extends AppCompatActivity {
         myDialog.show();
     }
 
+    /**
+     * Generate random double from min to max
+     * @param min Lowest value to start from
+     * @param max Highest value to end with
+     * @return Double type is returned
+     */
     public static double getRandomIntegerBetweenRange(double min, double max){
         double x = (int)(Math.random()*((max-min)+1))+min;
         return x;

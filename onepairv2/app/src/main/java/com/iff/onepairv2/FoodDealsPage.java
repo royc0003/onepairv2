@@ -27,15 +27,35 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * An activity that displays a list of food deals
+ */
 public class FoodDealsPage extends AppCompatActivity {
-
+    /**
+     * Layout list view that shows the deals
+     */
     private ListView listView;
+    /**
+     * To adapt to the list view
+     */
     private DealsListViewAdapter adapter;
+    /**
+     * An array list of deal objects
+     */
     private ArrayList<Deal> dealList = new ArrayList<Deal>();
-
+    /**
+     * Tool bar at the top of the activity
+     */
     private Toolbar mToolbar;
+    /**
+     * Firebase user authentication
+     */
     private FirebaseAuth mAuth;
 
+    /**
+     * Called when activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +123,12 @@ public class FoodDealsPage extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Creates a drop down menu at the top right of the tool bar
+     * @param menu
+     * @return boolean type
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dealspagemenu, menu);
@@ -131,6 +157,11 @@ public class FoodDealsPage extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * For selection of items in the tool bar menu
+     * @param item Each item on the menu
+     * @return boolean type
+     */
     //for side bar menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -160,13 +191,18 @@ public class FoodDealsPage extends AppCompatActivity {
         return false;
     }
 
-
+    /**
+     * Sends user to start activity if user is not logged in
+     */
     private void sendToStart() {
         Intent startIntent = new Intent(FoodDealsPage.this, StartActivity.class);
         startActivity(startIntent);
         finish();
     }
 
+    /**
+     * Called when activity is subsequently launched
+     */
     @Override
     public void onStart() {
         super.onStart();
