@@ -20,16 +20,46 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
+/**
+ * Activity class for users to change their name
+ * @author ifandonlyif
+ */
+
 public class ChangeNameActivity extends AppCompatActivity {
 
+    /**
+     * Toolbar at the top of the app
+     */
     private Toolbar mToolbar;
+    /**
+     * New name input by the user
+     */
     private TextInputLayout mNewName;
+    /**
+     * Button used for saving the user's new name
+     */
     private Button mSavebtn;
+    /**
+     * Firebase database
+     */
     private FirebaseAuth mAuth;
+    /**
+     * Database reference
+     */
     private DatabaseReference mDisplayNameDatabase;
+    /**
+     * Firebase user object of the current user
+     */
     private FirebaseUser mCurrentUser;
+    /**
+     * Progress dialog to show updating of name is in progress
+     */
     private ProgressDialog mUpdateNameProgress;
 
+    /**
+     * Called when the activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

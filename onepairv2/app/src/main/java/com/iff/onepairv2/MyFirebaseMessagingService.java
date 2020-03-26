@@ -18,13 +18,28 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONObject;
 
+/**
+ * Used for receiving messages from Firebase Cloud Messaging and handle downstream messages
+ * @author ifandonlyif
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    /**
+     * Used to check if a user is matched
+     */
     protected static int matched = 0;
+    /**
+     * Used to send background push notifications to users of a topic
+     */
     private String subscribeTopic;
+    /**
+     * Firebase authentication object
+     */
     private FirebaseAuth mAuth;
+    /**
+     * UID of the current user
+     */
     private String ownUid;
-
 
 
     /**
@@ -42,6 +57,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //sendRegistrationToServer(token);
     }
 
+    /**
+     * Used to send messages to the application when it is in the foreground
+     * @param remoteMessage
+     */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
