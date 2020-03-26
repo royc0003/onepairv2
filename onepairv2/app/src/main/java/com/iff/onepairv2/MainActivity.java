@@ -37,16 +37,40 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
+/**
+ * Activity for homepage
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * Firebase Authentication object
+     */
     private FirebaseAuth mAuth;
+    /**
+     * Toolbar at the top of the activity
+     */
     private Toolbar mToolbar;
+    /**
+     * CardView for each category of deals
+     */
     private CardView foodCard, entertainmentCard, retailCard, othersCard;
+    /**
+     * Slideshow of all deals
+     */
     private ViewFlipper vFlipper;
+    /**
+     * ArrayList of URLs of deals
+     */
     private ArrayList<String> imgArray = new ArrayList<String>(); //arrayList to be used for url
+    /**
+     * ArrayList of deals
+     */
     private ArrayList<Deal> dealList = new ArrayList<Deal>(); // added arrayList of deals
 
+    /**
+     * Called when activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +171,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * Function to retrieve URL of images for the
+     * all deals for use in the slideshow
+     * @param deal Deal object
+     * @return ArrayList of URL
+     */
     public ArrayList<String> useFlipperImages(ArrayList<Deal> deal){
         ArrayList<Deal> tempDeal = deal;
         ArrayList<String> tempString = new ArrayList<>();
@@ -159,6 +189,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return tempString;
     }
 
+    /**
+     * Function to display all image url retrieved
+     * @param imageURL URL of images of deals
+     */
     public void flipperImages(String imageURL){
         ImageView imageView = new ImageView(this);
         Picasso.get().load(imageURL).into(imageView);
@@ -174,6 +208,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vFlipper.startFlipping();
     }
 
+    /**
+     * Function to save user's session token
+     * @param token Session Token of current user
+     */
     private void saveToken(String token) {
         String email;
         String uid;
@@ -218,6 +256,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Called when activity is subsequently launched
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -231,12 +272,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Sends user to StartActivity if user is not logged in
+     */
     private void sendToStart() {
         Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
         startActivity(startIntent);
         finish();
     }
 
+    /**
+     * Creates a dropdown menu on the right side of the toolbar
+     * @param menu Menu object
+     * @return Returns a boolean value
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -244,6 +293,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    /**
+     * For selection of items in the toolbar menu
+     * @param item MenuItem object
+     * @return Returns a boolean value
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -271,6 +325,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
+    /**
+     * Function to link each CardView to its respective page
+     * @param v View object
+     */
     public void onClick(View v) {
         Intent i;
 
