@@ -1,5 +1,5 @@
 package com.iff.onepairv2;
-//hellyeah
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -27,14 +27,27 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Activity used to display entertainment deals
+ * @author ifandonlyif
+ */
 public class EntertainmentDealsPage extends AppCompatActivity {
 
+    /** Used to display deals in a list format*/
     private ListView listView;
+    /** Adapter used to display deals */
     private DealsListViewAdapter adapter;
+    /** Array list of entertainment deals */
     private ArrayList<Deal> dealList = new ArrayList<Deal>();
+    /** Toolbar at the top of the activity */
     private Toolbar mToolbar;
+    /**Firebase Authentication object */
     private FirebaseAuth mAuth;
 
+    /**
+     * Called when the activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +114,11 @@ public class EntertainmentDealsPage extends AppCompatActivity {
         });
     }
 
+    /**
+     * Creates a drop down menu at the right side of the toolbar
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.dealspagemenu, menu);
@@ -129,7 +147,11 @@ public class EntertainmentDealsPage extends AppCompatActivity {
         return true;
     }
 
-    //for side bar menu
+    /**
+     * For selection of items in the toolbar menu
+     * @param item
+     * @return boolean
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -158,12 +180,20 @@ public class EntertainmentDealsPage extends AppCompatActivity {
         //return super.onOptionsItemSelected(item);
         return false;
     }
+
+    /**
+     * If not logged in, this method will send user to the start activity
+     */
     private void sendToStart() {
         Intent startIntent = new Intent(EntertainmentDealsPage.this, StartActivity.class);
         startActivity(startIntent);
         finish();
     }
 
+
+    /**
+     * Called when activity is subsequently launched
+     */
     @Override
     public void onStart() {
         super.onStart();

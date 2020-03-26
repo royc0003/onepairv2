@@ -52,34 +52,63 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Activity for users to chat with each other
+ * @author ifandonlyif
+ */
+
 public class ChatActivity extends AppCompatActivity {
 
+    /** UID of the target user */
     private String mChatUserTargetUid;
+    /** Name of the targer user */
     private String mChatUserTargetName;
+    /** Image url of the target user */
     private String mChatUserTargetImage;
+    /** UID of the current user */
 
     private String mChatUserOwnUid;
+    /** Name of the current user */
     private String mChatUserOwnName;
+    /** Image url of the own user */
     private String mChatUserOwnImage;
+    /** Toolbar at the top of the activity */
     private Toolbar mToolbar;
+    /** Firebase authentication */
     private FirebaseAuth mAuth;
+    /** Database reference */
     private DatabaseReference mRootRef;
 
     //xml elements
+    /** Image view used to display target image */
     private ImageView mChatTargetImage;
+    /** Editable text box used to craft a new message */
     private EditText mMsgField;
+    /** Button used to send a new message */
     private ImageButton mSendBtn;
+    /** Used to display and format messages */
     private RecyclerView mMessagesList;
 
+    /** Stores all the messages objects of the user */
     private final List<Messages> MESSAGES_LIST = new ArrayList<>();
+    /** Used to set the activity to a linear layout */
     private LinearLayoutManager mLinearLayout;
+    /** Used to load and display messages */
     private MessageAdapter mAdapter;
 
+    /** Used for background push notifications */
     private RequestQueue mRequestQueue;
+    /** Used for background push notifications */
     private String URL = "https://fcm.googleapis.com/fcm/send";
+    /** Users suscribed to the topic can receive background push notifications */
     private String topic;
+    /** Database reference */
     private DatabaseReference mUserDatabase;
 
+    /**
+     * Called when the activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,14 +201,22 @@ public class ChatActivity extends AppCompatActivity {
 
 
     }
-
+    /**
+     * Creates a drop down menu at the right side of the toolbar
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.chat_menu, menu);
         return true;
     }
-
+    /**
+     * For selection of items in the toolbar menu
+     * @param item
+     * @return boolean
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -223,6 +260,9 @@ public class ChatActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Loads all the messages of the current user and the target user
+     */
     private void loadMessages() {
         mRootRef.child("Messages").child(mChatUserOwnUid).child(mChatUserTargetUid).addChildEventListener(new ChildEventListener() {
             @Override
@@ -255,6 +295,10 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sends messages and updates firebase database
+     * @param sender
+     */
     private void sendMessage(String sender) {
 
         String message = mMsgField.getText().toString();
@@ -285,6 +329,11 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sends background notifications to target user once the message is sent to the target user
+     * @param message
+     * @param sender
+     */
     private void sendNotification(final String message, final String sender) {
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mChatUserOwnUid);
         mUserDatabase.addValueEventListener(new ValueEventListener() {
@@ -342,17 +391,6 @@ public class ChatActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-        /*Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra("user_id", mChatUser_own_uid);
-
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_ONE_SHOT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "123");
-
-        builder.setContentIntent(pendingIntent);*/
-
             }
 
 

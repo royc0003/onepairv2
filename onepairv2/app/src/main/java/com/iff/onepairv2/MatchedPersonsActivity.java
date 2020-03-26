@@ -20,24 +20,41 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-
+/**
+ * Activity to show list of all past matches and allow users to chat with past matches when clicked
+ * @author ifandonlyif
+ */
 public class MatchedPersonsActivity extends AppCompatActivity {
 
+    /** Firebase authentication object */
     private FirebaseAuth mAuth;
-    private static MatchedPersonsActivity singleInstance = null;
+    /** Database reference */
     private DatabaseReference mDatabaseReference, mDatabaseReference2;
 
+    /** Toolbar at the top of the activity */
     private Toolbar mToolbar;
+    /** Used to display past matches in a list format */
     private ListView listView;
+    /** Adapter used to display matches */
     private MatchesListViewAdapter adapter;
 
+    /** Used to store UIDS of all past matches */
     private ArrayList<String> matchUids = new ArrayList<String>();
+    /** Used to store all past matches Users objects */
     private ArrayList<Users> allUsers = new ArrayList<Users>();
+    /** Used to store names of all past matches */
     private ArrayList<String> name = new ArrayList<String>();
+    /** Used to store uid of all past matches */
     private ArrayList<String> uid = new ArrayList<String>();
+    /** Used to store image url of all past matches */
     private ArrayList<String> image = new ArrayList<String>();
+    /** Used to store past matches ChatUser objects */
     private ArrayList<ChatUser> chatList = new ArrayList<ChatUser>();
 
+    /**
+     * Called when the activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,14 +140,11 @@ public class MatchedPersonsActivity extends AppCompatActivity {
         });
     }
 
-    public static MatchedPersonsActivity getInstance() {
-        if (singleInstance == null) {
-            singleInstance = new MatchedPersonsActivity();
-        }
-        System.out.println("GOT INSTANCE");
-        return singleInstance;
-    }
-
+    /**
+     * Creates a drop down menu at the right side of the toolbar
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -138,6 +152,11 @@ public class MatchedPersonsActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * For selection of items in the toolbar menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -165,6 +184,9 @@ public class MatchedPersonsActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Sends user to start activity if user is not logged in
+     */
     private void sendToStart() {
         Intent startIntent = new Intent(MatchedPersonsActivity.this, StartActivity.class);
         startActivity(startIntent);
