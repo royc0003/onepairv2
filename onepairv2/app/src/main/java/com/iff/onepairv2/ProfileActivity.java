@@ -31,24 +31,41 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+/**
+ * Activity to show current user's account information
+ * @author ifandonlyif
+ */
 public class ProfileActivity extends AppCompatActivity {
 
+    /** Firebase authentication object */
     private FirebaseAuth mAuth;
+    /** Toolbar at the top of the activity */
     private Toolbar mToolbar;
+    /** Database reference */
     private DatabaseReference mUserDatabase;
+    /** Firebase database reference of the current user */
     private FirebaseUser mCurrentUser;
 
+    /** Used to display the profile picture of the current user */
     private ImageView mProfilePic;
+    /** Used to display the name of the current user */
     private TextView mDisplayName;
+    /** Button to allow user to change the user's name */
     private Button profileChangeNameBtn;
+    /** Button to allow user to change the usser's profile picture */
     private Button profileChangePicBtn;
 
+    /** Progress dialog to show that the profile picture is currently being changed */
     private ProgressDialog mProfileImageDialog;
-
+    /** integer for gallery pick */
     private static final int GALLERY_PICK = 1;
-
+    /** StorageReference object */
     private StorageReference mImageStorage;
 
+    /**
+     * Called when activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    /** Used for uploading of profile picture and changing of profile picture */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -155,7 +173,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Creates a drop down menu at the right side of the toolbar
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -163,6 +185,11 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * For selection of items in the toolbar menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
@@ -191,12 +218,18 @@ public class ProfileActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     *  Sends user to start activity if user is not logged in
+     */
     private void sendToStart() {
         Intent startIntent = new Intent(ProfileActivity.this, StartActivity.class);
         startActivity(startIntent);
         finish();
     }
 
+    /**
+     * Called when activity is subsequently launched
+     */
     @Override
     public void onStart() {
         super.onStart();
