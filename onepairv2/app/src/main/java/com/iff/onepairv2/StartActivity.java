@@ -8,12 +8,28 @@ import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.widget.Toolbar;
 
+/**
+ * Activity upon start-up if user is not logged in
+ */
 public class StartActivity extends AppCompatActivity {
 
+    /**
+     * Button for user to go to the register page
+     */
     private Button mRegBtn;
+    /**
+     * Button for user to go to the login page
+     */
     private Button mLoginBtn;
+    /**
+     * Toolbar at the top of the activity
+     */
     private Toolbar mToolbar;
 
+    /**
+     * Called when activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

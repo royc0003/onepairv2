@@ -31,21 +31,52 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Activity for users to log in
+ */
 public class LoginActivity extends AppCompatActivity {
 
+    /**
+     * Toolbar at the top of the activity
+     */
     private Toolbar mToolbar;
 
+    /**
+     * Entry field to type in user's email
+     */
     private TextInputLayout mLogEmail;
+    /**
+     * Entry field to type in user's password
+     */
     private TextInputLayout mLogPassword;
+    /**
+     * Button for user to log in with current email and password
+     */
     private Button mLogBtn;
 
+    /**
+     * Pop-up during log in process
+     */
     private ProgressDialog mLoginProgress;
 
+    /**
+     * Firebase Authentication object
+     */
     private FirebaseAuth mAuth;
 
+    /**
+     * Visibility toggle button
+     */
     private ImageButton mVisibilityBtn;
+    /**
+     * Option to toggle the visibility of password
+     */
     private boolean showPassword = false;
 
+    /**
+     * Called when activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +130,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Function to authenticate user's log in credentials
+     * @param email Email of current user
+     * @param password Password of current user
+     */
     private void loginUser(String email, String password) {
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
