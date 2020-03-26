@@ -32,22 +32,56 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.text.method.PasswordTransformationMethod;
 
+/**
+ * An activity that displays a registration form for users
+ */
 public class RegisterActivity extends AppCompatActivity {
-
+    /**
+     * Text view for displaying name
+     */
     private TextInputLayout mDisplayName;
+    /**
+     * Text view to display email
+     */
     private TextInputLayout mEmail;
+    /**
+     * Text view to display password
+     */
     private TextInputLayout mPassword;
+    /**
+     * Button to register user
+     */
     private Button mRegBtn;
 
+    /**
+     * Tool bar at the top of the activity
+     */
     private Toolbar mToolbar;
+    /**
+     * A progress dialog upon registering
+     */
     private ProgressDialog mRegProgress;
-
+    /**
+     * Firebase user authentication
+     */
     private FirebaseAuth mAuth;
+    /**
+     * A firebase database reference object
+     */
     private DatabaseReference mDatabase;
-
+    /**
+     * A button to hide/show password
+     */
     private ImageButton mVisibilityBtn;
+    /**
+     * Condition to hide/show password
+     */
     private boolean showPassword = false;
 
+    /**
+     * Called when activity is first launched
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +137,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * A function to register a user
+     * @param displayName The display name of the user
+     * @param email The email of the user
+     * @param password The password of the iser
+     */
     private void registerUser(final String displayName, String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
