@@ -1,5 +1,6 @@
 # onepairv2
-A “LIVE” discount matching application using Android Studio enabling users to view list of available categorized one-for-one discounts. Users can post and match with someone to enjoy discount.
+A “LIVE” discount matching application using Android Studio enabling users to view list of available categorized one-for-one discounts. Users can post and match with someone to enjoy discount.\
+Note: **Live Demo Video** is embedded at the bottom of the README.md
 
 ## Objective
 - Allow users to see available one-for-one deals
