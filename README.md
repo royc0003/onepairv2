@@ -10,6 +10,13 @@ A “LIVE” discount matching application using Android Studio enabling users t
 - RESTful API
     - API to get scrapped data for deals <img src="/image/magnifying_glass.png" width="2.5%" height="2.5%">
 - Firebase Api
+    - API to store user data, session token and chat data. <img src="/image/book.png" width="2.5%" height="2.5%">
 - Picasso Api
+    - API to display images from image url <img src="/image/picture.png" width="2.5%" height="2.5%">
 - Government Train Station API
+    - API to retrieve locations with MRT Stations <img src="/image/map.png" width="2.5%" height="2.5%">
 - ArthurHub's ANdroid Image Cropper
+    - API to allow users to upload profile picture <img src="/image/human.png" width="2.5%" height="2.5%">
+
+## Use Case Diagram
+<img src="/image/use_case.png" width="100%" height="100%">
