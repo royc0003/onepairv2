@@ -63,3 +63,25 @@ def getAllDeals(request):
 
 ### 3-Tiered + Client Server Architecture
 <img src="/image/architecture_style.png" width="100%" height="100%">
+
+
+## Design Pattern Implemented
+
+### Stratergy + Factory Pattern
+- Problem: To resolve the issue of increased `dependencies` and `tight coupling`
+<img src="/image/stratergy_factory.png" width="100%" height="100%">
+
+### Observer Pattern
+- Problem: To resolve the need of constnatly checking on the server for the match's result.
+<img src="/image/observer.png" width="100%" height="100%">
+
+
+## Project Scheduling
+
+### Overall Planning
+<img src="/image/overall_planning.png" width="100%" height="100%">
+
+### Critical Path Analysis
+<img src="/image/critical_path_analysis.png" width="100%" height="100%">
+
+
