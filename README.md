@@ -6,6 +6,12 @@ A “LIVE” discount matching application using Android Studio enabling users t
 - Find another user to match with based on preferred location and deal
 - Chatroom to make appropriate arrangements available once match occurs
 
+## Main Features Implemented
+- Log In/Register
+- Display one-for-one deals for chosen category
+- Find match
+- Chat
+
 ## APIs used
 - RESTful API
     - API to get scrapped data for deals <img src="/image/magnifying_glass.png" width="2.5%" height="2.5%">
@@ -20,3 +26,35 @@ A “LIVE” discount matching application using Android Studio enabling users t
 
 ## Use Case Diagram
 <img src="/image/use_case.png" width="100%" height="100%">
+
+## Backend
+- Diagram of Restful API (CRUD operation)
+    - Create
+    - Read
+    - Update
+    - Delete
+- Example of implemented API Calls
+
+### RESTful 
+<img src="/image/restful.png" width="100%" height="100%">
+
+### Examples of Implemented API Calls
+```java
+// Client Side example
+public interface BackEndController {
+    public static final String URL = "https://....";
+
+    @GET("getAllDeals")
+    Call<ArrayList<Deal>> getAllDeals();
+}
+
+```
+
+```python
+# Server Side example
+def getAllDeals(request):
+    querySet = Deals.objects.all()
+    serializer = DealsSerializer(queryset, many = True)
+    return HttpsResponse(json.dumps(serializer.data))
+
+```
