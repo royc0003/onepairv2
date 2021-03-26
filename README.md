@@ -58,3 +58,8 @@ def getAllDeals(request):
     return HttpsResponse(json.dumps(serializer.data))
 
 ```
+
+## Architecture Style
+
+### 3-Tiered + Client Server Architecture
+<img src="/image/architecture_style.png" width="100%" height="100%">
