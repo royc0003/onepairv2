@@ -8,7 +8,7 @@ A “LIVE” discount matching application using Android Studio enabling users t
 
 ## APIs used
 - RESTful API
-    - API to get scrapped data for deals <img src="/image/magnifying_glass.png" width="1%" height="1%">
+    - API to get scrapped data for deals <img src="/image/magnifying_glass.png" width="2.5%" height="2.5%">
 - Firebase Api
 - Picasso Api
 - Government Train Station API
